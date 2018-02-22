@@ -12,7 +12,7 @@ import nbformat
 from nbconvert.preprocessors import ExecutePreprocessor
 from nbconvert.preprocessors import CellExecutionError
 
-VERBOSE = True
+VERBOSE = False
 
 ROOT = Path(__file__).resolve().parents[1]
 DIRSKIP = [ROOT / 'tests', ROOT / 'data']
@@ -77,6 +77,8 @@ def test_notebooks():
         # Execute
         ep = ExecutePreprocessor(timeout=600, kernel_name='python3')
         try:
+            if VERBOSE:
+                print(f"testing {nb_f}")
             ep.preprocess(nb, {'metadata': {'path': str(nb_f.parent)}})
         except CellExecutionError as e:
             msg = 'Error executing the notebook "%s".\n\n' % nb_f
