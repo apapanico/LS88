@@ -8,6 +8,7 @@ from matplotlib.ticker import MultipleLocator as _MultipleLocator
 from matplotlib.collections import PolyCollection as _PC
 from matplotlib.colors import LinearSegmentedColormap as _LinearSegmentedColormap
 from matplotlib.cm import register_cmap as _register_cmap
+from IPython.display import display as _display
 
 cmap = _plt.get_cmap('Dark2')
 cmap_4thdownbot = _LinearSegmentedColormap.from_list(
@@ -16,11 +17,12 @@ _register_cmap(name='4thdownbot_cmap', cmap=cmap_4thdownbot)
 
 
 def display_re_matrix(re):
-    display(re.unstack(level=0).sort_values(by=0))
+    _display(re.unstack(level=0).sort_values(by=0))
 
 
 def display_weights(w):
-    display(w.to_frame().transpose())
+    _display(w.to_frame().transpose())
+
 
 def fast_run_expectancy(retro, re):
     TABLE_FLAG = False
@@ -75,10 +77,11 @@ def most_common_lineup_position(retro):
     else:
         return lineup_pos
 
+
 def prettify_4thdownbot(data, ax, annotate=True, colorbar=False):
     ax.imshow(data, alpha=.6, cmap='4thdownbot_cmap', aspect='auto',
               origin='lower', extent=(1, 100, -.5, 8.5))
-    
+
     ax.set_xlim(-.25, 100.25)
     ax.set_xticks(
         _np.array([-.5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99.5]) + .5)

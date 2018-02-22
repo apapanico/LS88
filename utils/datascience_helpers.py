@@ -100,8 +100,23 @@ def scatter_by_x(table, x_columns, y_column, base_width=5, height=5,
         fig.suptitle(title)
 
 
-def fill_null_values(table, column, fill_value=0):
-    return table.to_df()[column].fillna(fill_value, inplace=False)
+# def fill_null_values(table, column, fill_value=0):
+#     return table.to_df()[column].fillna(fill_value, inplace=False)
+
+
+# def fill_null(table, value=None, method=None):
+#     df = table.to_df().fillna(value=value, method=method)
+#     return _Table.from_df(df)
+
+
+def fill_null(table, fill_column=None, fill_value=None, fill_method=None):
+    TABLE_FLAG = False
+    if isinstance(table, _Table):
+        TABLE_FLAG = True
+        table = table.to_df()
+    data = table[fill_column] if fill_column is not None else table
+    data = data.fillna(value=fill_value, method=fill_method)
+    return _Table.from_df(data) if TABLE_FLAG else data
 
 
 def replace(table, column, to_replace, method='pad'):
@@ -203,11 +218,6 @@ def cut(col, bins, right=True, labels=None, retbins=False, precision=3,
     return out
 
 
-def fill_null(table, value=None, method=None):
-    df = table.to_df().fillna(value=value, method=method)
-    return _Table.from_df(df)
-
-
 def curve_fit(x, y, smoothness=.5):
     from statsmodels.nonparametric.smoothers_lowess import lowess
     results = lowess(y, x, is_sorted=True, frac=smoothness)
@@ -228,7 +238,7 @@ def multi_sort(table, by, descending=True, na_position='first'):
 def prettify_4thdownbot(data, ax, annotate=True, colorbar=False):
     ax.imshow(data, alpha=.6, cmap='4thdownbot_cmap', aspect='auto',
               origin='lower', extent=(1, 100, -.5, 8.5))
-    
+
     ax.set_xlim(-.25, 100.25)
     ax.set_xticks(
         _np.array([-.5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 99.5]) + .5)

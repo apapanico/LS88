@@ -48,12 +48,13 @@ def verify_table(tbl, target):
 
     return True
 
+
 def head(table, n=5):
     return table.take[:n]
 
 
 def scatterplot_by_x(table, x_columns, y_column, base_width=5, height=5,
-                 sharey=True, title=None):
+                     sharey=True, title=None):
     if isinstance(table, _Table):
         table = table.to_df()
     ncols = len(x_columns)
@@ -76,18 +77,17 @@ def scatterplot_by_x(table, x_columns, y_column, base_width=5, height=5,
 
 
 def fill_null(table, fill_column=None, fill_value=None, fill_method=None):
-    TABLE_FLAG = False
     if isinstance(table, _Table):
-        TABLE_FLAG = True
         table = table.to_df()
     data = table[fill_column] if fill_column is not None else table
     data = data.fillna(value=fill_value, method=fill_method)
-    return _Table.from_df(data) if TABLE_FLAG else data
+    return data.values
 
 
 def replace(table, column, to_replace, method='pad'):
     return table.to_df()[column].replace(
         to_replace, method=method, inplace=False)
+
 
 def get_first_from_group(table, groupby):
     TABLE_FLAG = False
@@ -130,7 +130,7 @@ def cut(col, bins, right=True, labels=None, retbins=False, precision=3,
 
 
 def bucket(col, buckets, right=True, bucket_labels=None, retbuckets=False, precision=3,
-        include_lowest=False):
+           include_lowest=False):
     out = _pd.cut(
         col,
         buckets,
