@@ -7,7 +7,6 @@ sys.path.insert(2, str(ROOT / 'utils'))
 print("Setting up Matplotlib")
 
 import matplotlib as mpl
-# mpl.use('agg')
 import matplotlib.pyplot as plt
 from IPython import get_ipython
 

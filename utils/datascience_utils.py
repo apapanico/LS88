@@ -129,8 +129,8 @@ def cut(col, bins, right=True, labels=None, retbins=False, precision=3,
     return out
 
 
-def bucket(col, buckets, right=True, bucket_labels=None, retbuckets=False, precision=3,
-           include_lowest=False):
+def bucket(col, buckets, right=True, bucket_labels=None, retbuckets=False,
+           precision=3, include_lowest=False):
     out = _pd.cut(
         col,
         buckets,
