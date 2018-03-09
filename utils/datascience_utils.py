@@ -152,3 +152,20 @@ def multi_sort(table, by, descending=True, na_position='first'):
     sorted_df = table.to_df().sort_values(
         by, ascending=not descending, na_position=na_position)
     return _Table.from_df(sorted_df)
+
+def sorted_boxplot(df, by, column, sort_order, figsize=(8, 6), fontsize=10):
+    df2 = _pd.DataFrame({col: vals[column] for col, vals in df.groupby(by)})
+    fig, ax = _plt.subplots(figsize=figsize)
+    df2[sort_order].boxplot(rot=90, sym='', ax=ax, fontsize=fontsize)
+    
+def hexbin_plot(data, x, y, C=None, collect=None, gridsize=None, cmap=None, mincnt=None,
+        vmin=None, vmax=None, **kwargs):
+    if isinstance(data, _ds.Table):
+        data = data.to_df()
+    hexbin = data.plot.hexbin(
+        x=x, y=y, C=C, reduce_C_function=collect,
+        gridsize=gridsize, cmap=cmap, mincnt=mincnt,
+        vmin=vmin, vmax=vmax, **kwargs
+    )
+    hexbin.tick_params(reset=True)
+    return hexbin
