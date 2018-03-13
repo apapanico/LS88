@@ -1,10 +1,12 @@
 import sys
 from pathlib import Path
 
+print('Adding datascience helper tools to path...')
+
 ROOT = Path(__file__).parents[1]
 sys.path.insert(2, str(ROOT / 'utils'))
 
-print("Setting up Matplotlib")
+print("Setting up Matplotlib...")
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
