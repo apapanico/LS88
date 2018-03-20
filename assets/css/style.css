@@ -1,0 +1,47 @@
+body {
+	height: auto;
+	margin: 0;
+	overflow-x: hidden;
+	background-color: #f3f3f3;
+}
+
+
+#bodyContent {
+	display: flex;
+    flex-direction: column;
+    min-width: 320px;
+    position: relative;
+    margin: 2em auto;
+    z-index: 1;
+    overflow: auto;
+}
+
+#body-inner {
+    margin-right: auto;
+    margin-left: auto;
+    overflow: hidden;
+}
+
+/*nav {
+	width: 100%;
+	position: fixed;
+	overflow: hidden;
+	background-color: #1D3048;
+
+	-webkit-box-shadow: 0 10px 15px -6px rgba(0, 0, 0, 0.2);
+		-moz-box-shadow: 0 10px 15px -6px rgba(0, 0, 0, 0.2);
+			box-shadow: 0 10px 15px -6px rgba(0, 0, 0, 0.2);
+
+	top: 0;
+	transition-timing-function: ease-out;
+	
+	-webkit-transition: top .4s;
+			transition: top .4s;
+
+	z-index: 10;
+
+	display: flex;
+
+	flex-wrap: wrap;
+	align-items: center;
+}*/
