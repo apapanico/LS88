@@ -22,10 +22,9 @@ body {
     overflow: hidden;
 }
 
-/*nav {
+nav {
 	width: 100%;
 	position: fixed;
-	overflow: hidden;
 	background-color: #1D3048;
 
 	-webkit-box-shadow: 0 10px 15px -6px rgba(0, 0, 0, 0.2);
@@ -44,4 +43,4 @@ body {
 
 	flex-wrap: wrap;
 	align-items: center;
-}*/
+}
