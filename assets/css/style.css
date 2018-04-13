@@ -44,3 +44,7 @@ nav {
 	flex-wrap: wrap;
 	align-items: center;
 }
+
+a {
+	cursor: pointer;
+}
