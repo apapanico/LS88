@@ -1,4 +1,6 @@
 /extras
+data/
+docs/
 
 .nb_test_cache
 
