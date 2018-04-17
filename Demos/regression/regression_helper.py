@@ -2,7 +2,8 @@ import numpy as _np
 import pandas as _pd
 import statsmodels.formula.api as _smf
 import statsmodels.api as _sm
-from scipy.sparse import coo_matrix as _coo_matrix
+from scipy.sparse import csr_matrix as _csr_matrix, eye as _sp_eye, diags as _sp_diags
+from scipy.sparse.linalg import LinearOperator as _LinearOperator, lsqr as _lsqr
 from sklearn import linear_model as _linear_model
 import datascience as _ds
 
@@ -23,7 +24,7 @@ def multiple_regression(dep_var, ind_vars, data, constant=False,
     return results.params, results.fittedvalues, results.resid
 
 
-def _sdf_to_coo(sdf, dtype=_np.float64):
+def _sdf_to_csr(sdf, dtype=_np.float64):
     cols, rows, datas = [], [], []
     for col, name in enumerate(sdf):
         s = sdf[name]
@@ -35,7 +36,7 @@ def _sdf_to_coo(sdf, dtype=_np.float64):
     cols = _np.concatenate(cols)
     rows = _np.concatenate(rows)
     datas = _np.concatenate(datas)
-    return _coo_matrix((datas, (rows, cols)), shape=sdf.shape)
+    return _csr_matrix((datas, (rows, cols)), shape=sdf.shape)
 
 
 def _multiple_regression_with_penalty(dep_var, ind_vars, data, weights=None,
@@ -47,14 +48,20 @@ def _multiple_regression_with_penalty(dep_var, ind_vars, data, weights=None,
         data = data.to_df()
     if not isinstance(ind_vars, list):
         ind_vars = [ind_vars]
+
     if use_sparse:
         data = data.to_sparse(fill_value=0)
-        X = _sdf_to_coo(data[ind_vars])
-    else:
-        X = data[ind_vars].values
-    if weights is not None:
-        w = data[weights].values
+
+    X = data[ind_vars].values
     y = data[dep_var].to_dense().values
+    m, n = X.shape
+
+    if weights is not None:
+        w = data[weights].to_dense().values.astype(float)
+
+    if use_sparse:
+        X = _csr_matrix(X)
+
     model = _linear_model.Ridge(
         alpha=penalty, fit_intercept=constant, copy_X=False)
     model.fit(X, y, sample_weight=w)
