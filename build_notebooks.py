@@ -11,12 +11,19 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('build_notebooks')
 
 
+TEST_NBDIR = "Demos/pythag"
+parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
+parser.add_argument('--test', action='store_const', const=TEST_NBDIR,
+                    help='Default Notebook to test')
+parser.add_argument('--extract-output', action='store_true', dest='extout',
+                    help='Extract figures from notebooks')
+parser.add_argument('--template', dest='tpl',
+                    help='Notebook Jinja template')
+
 # ROOT = Path('.').resolve()
 ROOT = Path(__file__).parent.resolve()
 NB_DIRS = ['Demos', 'HW']
-# DOCS = ROOT / 'docs'
-# BUILD_DIRECTORY = DOCS / 'content'
-NOTEBOOK_TPL = 'assets/templates/notebook.tpl'
+DEFAULT_TPL = 'assets/templates/notebook.tpl'
 
 
 def load_notebook(nbf):
@@ -25,7 +32,7 @@ def load_notebook(nbf):
     return nb
 
 
-def nb_to_html(nbf, name, tpl=NOTEBOOK_TPL):
+def nb_to_html(nbf, name, tpl, extout=True):
     nbf_path = str(nbf.parent)
     resources = {
         'output_files_dir': f'img/{name}',
@@ -45,12 +52,15 @@ def nb_to_html(nbf, name, tpl=NOTEBOOK_TPL):
         nb.cells.pop(0)
 
     logger.info(f"executing {nbf}")
+
+    preprocessors = ['nbconvert.preprocessors.ExecutePreprocessor']
+    if extout:
+        preprocessors.append(
+            'nbconvert.preprocessors.ExtractOutputPreprocessor'
+        )
     c = Config()
     c.HTMLExporter.template_file = tpl
-    c.HTMLExporter.preprocessors = [
-        'nbconvert.preprocessors.ExecutePreprocessor',
-        'nbconvert.preprocessors.ExtractOutputPreprocessor'
-    ]
+    c.HTMLExporter.preprocessors = preprocessors
     html_exporter = HTMLExporter(config=c)
     (body, resources) = html_exporter.from_notebook_node(nb, resources)
 
@@ -59,7 +69,12 @@ def nb_to_html(nbf, name, tpl=NOTEBOOK_TPL):
     writer.write(body, resources, notebook_name=name)
 
 
-def build_nb(nbdir, limit=None):
+def build_nb(nbdir, limit=None, tpl=None, extout=True):
+    tpl = tpl or DEFAULT_TPL
+    logger.info(f"Using template {tpl}")
+    if extout:
+        logger.info(f"Extracting output")
+
     notebooks = [
         nbf
         for nbf in nbdir.glob('**/*.ipynb')
@@ -69,23 +84,19 @@ def build_nb(nbdir, limit=None):
         notebooks = notebooks[:limit]
     for nbf in notebooks:
         name = nbf.stem.replace(' - ', '_').replace(' ', '_').lower()
-        nb_to_html(nbf, name)
-
-
-TEST_NBDIR = "Demos/pythag"
-parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
-parser.add_argument('--test', action='store_const', const=TEST_NBDIR,
-                    help='Default Notebook to test')
+        nb_to_html(nbf, name, tpl, extout=extout)
 
 
 def main():
     args = parser.parse_args()
+    extout = args.extout
+    tpl = args.tpl
     if args.test is not None:
         nbdir = Path(args.test)
-        build_nb(nbdir, limit=1)
+        build_nb(nbdir, limit=1, tpl=tpl, extout=extout)
     else:
         for d in NB_DIRS:
-            build_nb(ROOT / d)
+            build_nb(ROOT / d, tpl=tpl, extout=extout)
 
 
 if __name__ == "__main__":
