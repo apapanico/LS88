@@ -10,6 +10,11 @@ import datascience as _ds
 
 def multiple_regression(dep_var, ind_vars, data, constant=False,
                         interactions=None):
+
+    DS_FLAG = False
+    if isinstance(data, _ds.Table):
+        DS_FLAG = True
+        data = data.to_df()
     if not isinstance(ind_vars, list):
         ind_vars = [ind_vars]
     formula = dep_var + '~' + (' + '.join(ind_vars))
@@ -21,7 +26,15 @@ def multiple_regression(dep_var, ind_vars, data, constant=False,
         for (interact_1, interact_2) in interactions:
             formula += f' + {interact_1}:{interact_2}'
     results = _smf.ols(formula, data=data).fit()
-    return results.params, results.fittedvalues, results.resid
+    if DS_FLAG:
+        params = results.params.to_dict()
+        fittedvalues = results.fittedvalues.values
+        resid = results.resid.values
+    else:
+        params = results.params
+        fittedvalues = results.fittedvalues
+        resid = results.resid
+    return params, fittedvalues, resid
 
 
 def _sdf_to_csr(sdf, dtype=_np.float64):
@@ -65,11 +78,11 @@ def _multiple_regression_with_penalty(dep_var, ind_vars, data, weights=None,
     model = _linear_model.Ridge(
         alpha=penalty, fit_intercept=constant, copy_X=False)
     model.fit(X, y, sample_weight=w)
+
+    coefs = _pd.Series(
+        {var: coef for var, coef in zip(ind_vars, model.coef_)})
     if DS_FLAG:
-        raise NotImplementedError('fill in datascience usage')
-    else:
-        coefs = _pd.Series(
-            {var: coef for var, coef in zip(ind_vars, model.coef_)})
+        coefs = coefs.to_dict()
     return coefs
 
 
