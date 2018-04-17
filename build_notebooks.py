@@ -28,7 +28,7 @@ def load_notebook(nbf):
 def nb_to_html(nbf, name, tpl=NOTEBOOK_TPL):
     nbf_path = str(nbf.parent)
     resources = {
-        'output_files_dir': 'img',
+        'output_files_dir': f'img/{name}',
         'metadata': {'path': nbf_path}
     }
     logger.info(f"Resources: {resources}")
@@ -59,30 +59,30 @@ def nb_to_html(nbf, name, tpl=NOTEBOOK_TPL):
     writer.write(body, resources, notebook_name=name)
 
 
-def build_nb(nbdir):
+def build_nb(nbdir, limit=None):
     notebooks = [
         nbf
         for nbf in nbdir.glob('**/*.ipynb')
         if not nbf.match('*checkpoint*')
     ]
+    if limit is not None:
+        notebooks = notebooks[:limit]
     for nbf in notebooks:
         name = nbf.stem.replace(' - ', '_').replace(' ', '_').lower()
         nb_to_html(nbf, name)
-        break
 
 
-DEFAULT_NB = "Demos/1 - Pythagorean Expectation/Demo - Pythagorean Expectation - The Relationship between Runs and Wins (DS).ipynb"
+TEST_NBDIR = "Demos/pythag"
 parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
-parser.add_argument('--test', action='store_const', const=DEFAULT_NB,
+parser.add_argument('--test', action='store_const', const=TEST_NBDIR,
                     help='Default Notebook to test')
 
 
 def main():
     args = parser.parse_args()
     if args.test is not None:
-        nbf = Path(args.test)
-        name = nbf.stem.replace(' - ', '_').replace(' ', '_').lower()
-        nb_to_html(nbf, name)
+        nbdir = Path(args.test)
+        build_nb(nbdir, limit=1)
     else:
         for d in NB_DIRS:
             build_nb(ROOT / d)
