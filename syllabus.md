@@ -1,7 +1,7 @@
 ---
 author:
 - Alex Papanicolaou
-date: Spring 2018
+semester: Spring 2018
 title: 'LS 88-2: Data Science Connector Sports Analytics'
 ---
 
