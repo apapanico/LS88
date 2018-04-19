@@ -24,10 +24,13 @@
 
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
     <link rel="stylesheet" href="/LS88/assets/css/style.css">
     <link rel="stylesheet" href="/LS88/assets/css/table.css">
-    <link rel="stylesheet" href="/LS88/assets/css/notebook.css">
+    <link rel="stylesheet" href="/LS88/assets/css/ipy_base.css">
+    <link rel="stylesheet" href="/LS88/assets/css/ipy_nb.css">
+    <link rel="stylesheet" href="/LS88/assets/css/ipy_tree.css">
+    <link rel="stylesheet" href="/LS88/assets/css/ipy_syntax.css">
 
 
     <!-- Loading mathjax macro -->
