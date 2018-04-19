@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     {%- block html_head -%}
     <meta charset="utf-8" />
 
@@ -17,17 +18,17 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/table.css">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="../../../assets/css/notebook.css">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="/LS88/assets/css/style.css">
+    <link rel="stylesheet" href="/LS88/assets/css/table.css">
+    <link rel="stylesheet" href="/LS88/assets/css/notebook.css">
+
 
     <!-- Loading mathjax macro -->
     {{ mathjax() }}
@@ -42,7 +43,7 @@
       <div id="nav-placeholder"></div>
       <script>
       $(function(){
-      $("#nav-placeholder").load("../../../nav.html");
+      $("#nav-placeholder").load("/LS88/nav.html");
       });
       </script>
       <!--end of Navigation bar-->
