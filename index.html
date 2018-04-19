@@ -11,9 +11,18 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+		<script>
+		$(function(){
+			$("#nav-placeholder").load("nav.html");
+		});
+		</script>
+
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div id="nav-placeholder"></div>
+		
+		<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<a class="navbar-brand" href="./index.html">LS88 - Sports Analytics</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -26,15 +35,15 @@
 					<li class="nav-item dropdown">
 						<a class="nav-link dropdown-toggle" data-toggle="dropdown">Demos</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Pythagorean Expectation</a>
-							<a class="dropdown-item" href="#">Offensive Metrics in Baseball</a>
-							<a class="dropdown-item" href="#">Run Expectancy</a>
-							<a class="dropdown-item" href="#">RE24</a>
-							<a class="dropdown-item" href="#">Linear Weights</a>
-							<a class="dropdown-item" href="#">PER</a>
-							<a class="dropdown-item" href="#">Expected Shot Value</a>
-							<a class="dropdown-item" href="#">Dean Oliver's Four Factor Model</a>
-							<a class="dropdown-item" href="#">The Hot Hand</a>
+							<a class="dropdown-item" href="content/demos/pythag/demo_pythagorean_expectation_the_relationship_between_runs_and_wins_(ds).html">Pythagorean Expectation</a>
+							<a class="dropdown-item" href="content/demos/off_metrics/demo_offensive_metrics_in_baseball_(ds).html">Offensive Metrics in Baseball</a>
+							<a class="dropdown-item" href="content/demos/run_expectancy/demo_run_expectancy_(ds).html">Run Expectancy</a>
+							<a class="dropdown-item" href="content/demos/re24/demo_re24_(ds).html">RE24</a>
+							<a class="dropdown-item" href="content/demos/lwts/demo_linear_weights_(ds).html">Linear Weights</a>
+							<a class="dropdown-item" href="content/demos/per/player_efficiency_rating_(ds).html">PER</a>
+							<a class="dropdown-item" href="content/demos/esv/shot_location_demo_(ds).html">Expected Shot Value</a>
+							<a class="dropdown-item" href="content/demos/ff/dean_oliver's_four_factors_(ds).html">Dean Oliver's Four Factor Model</a>
+							<a class="dropdown-item" href="content/demos/hothand/demo_the_hot_hand_(ds).html">The Hot Hand</a>
 						</div>
 					</li>
 					<li class="nav-item dropdown">
@@ -48,12 +57,10 @@
 					<li class="nav-item">
 						<a class="nav-link" href="./lectures.html">Lectures</a>
 					</li>
-					<!-- <li class="nav-item">
-								<a class="nav-link" href="./project/project.pdf">Project</a>
-					</li> -->
 				</ul>
 			</div>
-		</nav>
+		</nav> -->
+
 		<div id="bodyContent">
 			<div id="body-inner">
 				<iframe src="https://calendar.google.com/calendar/embed?src=berkeley.edu_hkqfm9sq1f3aj8f31855nc4ucc%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
