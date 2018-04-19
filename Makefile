@@ -17,3 +17,6 @@ notebooks:
 
 notebooks_force:
 	$(PY) $(BASEDIR)/build_notebooks.py --force
+
+notebooks_test:
+	$(PY) $(BASEDIR)/build_notebooks.py --test --force

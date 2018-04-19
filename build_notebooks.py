@@ -13,9 +13,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('build_notebooks')
 
 
-TEST_NBDIR = "Demos/pythag"
+TEST_NB = "Demos/esv/Shot Location Demo (DS).ipynb"
 parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
-parser.add_argument('--test', action='store_const', const=TEST_NBDIR,
+parser.add_argument('--test', action='store_const', const=TEST_NB,
                     help='Default Notebook to test')
 parser.add_argument('--force', action='store_true',
                     help='Force notebook build')
@@ -141,12 +141,7 @@ def main():
     force = args.force
 
     if args.test is not None:
-        nbdir = ROOT / Path(args.test)
-        notebooks = [
-            (nbdir, nbf.relative_to(nbdir))
-            for nbf in nbdir.glob('**/*.ipynb')
-            if not nbf.match('*checkpoint*')
-        ][:1]
+        notebooks = [Path(TEST_NB)]
     else:
         notebooks = []
         for nbdir in NB_DIRS:

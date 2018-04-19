@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head><meta charset="utf-8" />
+
     
     <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
-    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/table.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
-  <!-- Loading mathjax macro -->
+    <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
@@ -32,13 +39,20 @@
     });
     </script>
     <!-- End of mathjax configuration --></head>
-
-    
-
     <body>
+      
+      <!--Navigation bar-->
+      <div id="nav-placeholder"></div>
+      <script>
+      $(function(){
+      $("#nav-placeholder").load("../../../nav.html");
+      });
+      </script>
+      <!--end of Navigation bar-->
+      
       <div tabindex="-1" id="notebook" class="border-box-sizing">
         <div class="container" id="notebook-container">
-    
+          
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -80,7 +94,17 @@
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Adding datascience helper tools to path...
 Setting up Matplotlib...
-Matplotlib imported as mpl
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Matplotlib imported as mpl
 Matplotlib.pyplot imported as plt
 </pre>
 </div>
@@ -1823,6 +1847,7 @@ $$</p>
 </div>
         </div>
       </div>
+
     </body>
   
  
