@@ -4,6 +4,8 @@ data/
 docs/
 
 .nb_test_cache
+.nb_build_cache
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

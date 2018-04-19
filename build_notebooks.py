@@ -126,11 +126,7 @@ def build_nb(notebooks, limit=None, tpl=None, extout=True, use_contentdir=True):
             logger.info(f"skipping (not executable) {name}")
             continue
 
-        print(name, tpl, str(nbf_path), str(build_path), extout)
-        raise
-
         nb_to_html(nb, name, tpl, str(nbf_path), str(build_path), extout=extout)
-
         cache_notebook(nbf)
 
 

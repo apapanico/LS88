@@ -20,7 +20,7 @@
     {{ navbar_head }}
 
     <!-- Custom stylesheet, it must be in the same directory as the html file -->
-    <link rel="stylesheet" href="../../assets/css/notebook.css">
+    <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
   <!-- Loading mathjax macro -->
     {{ mathjax() }}
