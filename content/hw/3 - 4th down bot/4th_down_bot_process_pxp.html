@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8" />
+    
+    <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+
+    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <link rel="stylesheet" href="../../assets/css/notebook.css">
+
+  <!-- Loading mathjax macro -->
+    <!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+
+    
+
+    <body>
+      <div tabindex="-1" id="notebook" class="border-box-sizing">
+        <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Handling-NFL-Play-by-Play">Handling NFL Play-by-Play<a class="anchor-link" href="#Handling-NFL-Play-by-Play">&#182;</a></h1><p>This notebook is an optional companion to the homework and shows how the play-by-play data was handled to extract the necessary components for modeling 4th downs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="NFL-PxP-Data">NFL PxP Data<a class="anchor-link" href="#NFL-PxP-Data">&#182;</a></h2><p>NFL play-by-play data is loaded from csv format.  Originally there were larger files containing all the fields and one file for each year.  The dataset has been pared down before this notebook to save space.</p>
+<p>Below is a list of avaible columns we will use.  Many are self explanatory so when needed, a description will be given.  Note, there are many more fields available that we will not use.</p>
+<ul>
+<li>GameID</li>
+<li>Drive - index given the # of the drive within the game</li>
+<li>qtr</li>
+<li>down</li>
+<li>yrdline100 - the yard line expressed on a scale of 1 to 99 instead of 1 to 50 and back to 1.</li>
+<li>ydstogo - yards to go for a first down</li>
+<li>Yards.Gained - yards gained on the play</li>
+<li>posteam - possessing team</li>
+<li>DefensiveTeam - defensive team</li>
+<li><del>desc - play description</del>  &lt;-- Had to drop this due to memory problems</li>
+<li>PlayType - label for what type of play</li>
+<li>Touchdown - 0,1 indicating if a TD was scored</li>
+<li>FieldGoalResult - label indicating good, blocked, or no good.</li>
+<li>FieldGoalDistance</li>
+<li>PosTeamScore - Score of the possessing team.  This will flip when the possession flips.</li>
+<li>DefTeamScore - Score of the defensive team.  This will flip when the possession flips.</li>
+<li>HomeTeam</li>
+<li>AwayTeam</li>
+</ul>
+<p>A few convenient data fields are added to ease computation of possession value.</p>
+<ul>
+<li>half</li>
+<li>yrdregion - region of the field: Inside the 10, 10 to 20, and beyond 20.</li>
+<li>HomeScore &amp; AwayScore - The score of the possession and defensive teams are given.  This changes as the ball changes possession</li>
+<li>nextposteam - The team possessing the ball in the next play. Non-plays are ignored</li>
+<li>nextyrdline100 - Where the ball is on the next play. Non-plays are ignored</li>
+<li>nextdown - The down for the next play</li>
+<li>1stdownconversion - Whether the current play converted a first down (0 or 1 value)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;data/nfl_pxp_2009_2016_reduced.csv.gz&#39;</span><span class="p">)</span>
+<span class="n">pxp</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[2]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GameID</th>
+      <th>Drive</th>
+      <th>qtr</th>
+      <th>down</th>
+      <th>yrdline100</th>
+      <th>ydstogo</th>
+      <th>posteam</th>
+      <th>DefensiveTeam</th>
+      <th>Yards.Gained</th>
+      <th>Touchdown</th>
+      <th>PlayType</th>
+      <th>FieldGoalResult</th>
+      <th>FieldGoalDistance</th>
+      <th>PosTeamScore</th>
+      <th>DefTeamScore</th>
+      <th>HomeTeam</th>
+      <th>AwayTeam</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>30.0</td>
+      <td>0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>39</td>
+      <td>0</td>
+      <td>Kickoff</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>58.0</td>
+      <td>10</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>5</td>
+      <td>0</td>
+      <td>Pass</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>53.0</td>
+      <td>5</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>-3</td>
+      <td>0</td>
+      <td>Run</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>56.0</td>
+      <td>8</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Pass</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>56.0</td>
+      <td>8</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Punt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2009091000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>98.0</td>
+      <td>10</td>
+      <td>TEN</td>
+      <td>PIT</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Run</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2009091000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>98.0</td>
+      <td>10</td>
+      <td>TEN</td>
+      <td>PIT</td>
+      <td>4</td>
+      <td>0</td>
+      <td>Pass</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2009091000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>94.0</td>
+      <td>6</td>
+      <td>TEN</td>
+      <td>PIT</td>
+      <td>-2</td>
+      <td>0</td>
+      <td>Run</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2009091000</td>
+      <td>2</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>96.0</td>
+      <td>8</td>
+      <td>TEN</td>
+      <td>PIT</td>
+      <td>11</td>
+      <td>0</td>
+      <td>Punt</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2009091000</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>43.0</td>
+      <td>10</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>3</td>
+      <td>0</td>
+      <td>Pass</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Processing-the-PxP-data">Processing the PxP data<a class="anchor-link" href="#Processing-the-PxP-data">&#182;</a></h2><p>The PxP data doesn't have everything we want so we can compute some things:</p>
+<ol>
+<li>We use a helper function <code>cut</code> which will cut the values of an array into bins.  An easy example of this is how we cut <code>qtr</code> to get <code>half</code>.  Another example is how we cut <code>yrdline100</code> to get regions on the field.</li>
+<li>We need to compute the home team score and the away team score.  Using <code>posteam</code>, <code>DefensiveTeam</code>, <code>PosTeamScore</code>, <code>DefTeamScore</code>, <code>HomeTeam</code>, and <code>AwayTeam</code>, we can piece these values together with some simple logic.  For some reason certain events leave null values in the dataset so we fill those values in using a helper function <code>fill_null</code>.  We forward fill the score values since one of these events doesn't lead to score changes.</li>
+<li>We compute <code>nextposteam</code>, <code>nextyrdline100</code>, <code>nextdown</code>, and <code>1stdownconversion</code>.  This basically tracks the result the current play to find where things stand at the end of the play.  This is a rather involved part that is not possible with the <code>datascience</code> package.  For details, see the code comments.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">process_pxp</span><span class="p">(</span><span class="n">pxp</span><span class="p">):</span>
+    <span class="c1"># Step 1</span>
+    <span class="c1"># Compute half.  For OT, use half = 3.</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;half&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+        <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;qtr&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Compute field region</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;yrdregion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span>
+        <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;yrdline100&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">9.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Inside10&#39;</span><span class="p">,</span> <span class="s1">&#39;10to20&#39;</span><span class="p">,</span> <span class="s1">&#39;Beyond20&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># Step 2</span>
+    <span class="c1"># Convert PosTeamScore/DefTeamScore to HomeScore/AwayScore</span>
+    <span class="n">pos_is_home</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;HomeTeam&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;posteam&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">def_is_home</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;HomeTeam&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;DefensiveTeam&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">pos_is_away</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;AwayTeam&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;posteam&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">def_is_away</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;AwayTeam&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;DefensiveTeam&#39;</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;HomeScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_is_home</span> <span class="o">*</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PosTeamScore&#39;</span><span class="p">]</span> <span class="o">+</span> \
+        <span class="n">def_is_home</span> <span class="o">*</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;DefTeamScore&#39;</span><span class="p">]</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;HomeScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;AwayScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pos_is_away</span> <span class="o">*</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PosTeamScore&#39;</span><span class="p">]</span> <span class="o">+</span> \
+        <span class="n">def_is_away</span> <span class="o">*</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;DefTeamScore&#39;</span><span class="p">]</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;AwayScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Step 3</span>
+    <span class="c1"># Compute nextposteam, nextyrdline100, nextdown, and 1stdownconversion.  </span>
+    <span class="c1"># Must be within a game and a half since possession doesn&#39;t carry between </span>
+    <span class="c1"># halves and obviously not between games.</span>
+    <span class="c1"># Non-relevant plays are ignored so that computations aren&#39;t mangled.</span>
+
+    <span class="c1"># Group by game halves</span>
+    <span class="n">game_halves</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;half&#39;</span><span class="p">])</span>
+    
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;posteam&#39;</span><span class="p">,</span> <span class="s1">&#39;yrdline100&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">]:</span>
+        <span class="n">next_col</span> <span class="o">=</span> <span class="s1">&#39;next&#39;</span> <span class="o">+</span> <span class="n">col</span>
+        <span class="c1"># Within a game half, shift the values for the column backward so that </span>
+        <span class="c1"># the n+1st entry becomes the nth entry</span>
+        <span class="n">next_col_vals</span> <span class="o">=</span> <span class="n">game_halves</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Plays we want to ignore</span>
+        <span class="n">next_col_vals</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;bfill&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># add the new column to the table</span>
+        <span class="n">pxp</span><span class="p">[</span><span class="n">next_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_col_vals</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;nextdown&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;ydstogo&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;Yards.Gained&#39;</span><span class="p">])</span> <span class="o">|</span> \
+        <span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;Touchdown&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;1stdownconversion&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Cleanup NaNs</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">pxp</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">pxp</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Clean index</span>
+    <span class="n">pxp</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pxp</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span> <span class="o">=</span> <span class="n">process_pxp</span><span class="p">(</span><span class="n">pxp</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 357787 entries, 0 to 357786
+Data columns (total 25 columns):
+GameID               357787 non-null int64
+Drive                357787 non-null int64
+qtr                  357787 non-null int64
+down                 304285 non-null float64
+yrdline100           357085 non-null float64
+ydstogo              357787 non-null int64
+posteam              357787 non-null object
+DefensiveTeam        357787 non-null object
+Yards.Gained         357787 non-null int64
+Touchdown            357787 non-null int64
+PlayType             357787 non-null object
+FieldGoalResult      357787 non-null object
+FieldGoalDistance    7815 non-null float64
+PosTeamScore         334437 non-null float64
+DefTeamScore         334437 non-null float64
+HomeTeam             357787 non-null object
+AwayTeam             357787 non-null object
+half                 357787 non-null category
+yrdregion            357085 non-null category
+HomeScore            357787 non-null float64
+AwayScore            357787 non-null float64
+nextposteam          357787 non-null object
+nextyrdline100       357786 non-null float64
+nextdown             357785 non-null float64
+1stdownconversion    357787 non-null int64
+dtypes: category(2), float64(9), int64(7), object(7)
+memory usage: 63.5+ MB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Save-DataFrame">Save DataFrame<a class="anchor-link" href="#Save-DataFrame">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/nfl_pxp_2009_2016.csv.gz&#39;</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s1">&#39;gzip&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+        </div>
+      </div>
+    </body>
+  
+ 
+
+
+</html>

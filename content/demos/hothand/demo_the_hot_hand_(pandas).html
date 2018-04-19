@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8" />
+    
+    <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+
+    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <link rel="stylesheet" href="../../assets/css/notebook.css">
+
+  <!-- Loading mathjax macro -->
+    <!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+
+    
+
+    <body>
+      <div tabindex="-1" id="notebook" class="border-box-sizing">
+        <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">hot_hand_helper</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;fivethirtyeight&#39;</span><span class="p">)</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">2018</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-Hot-Hand">The Hot Hand<a class="anchor-link" href="#The-Hot-Hand">&#182;</a></h1><p>The notion of a hot hand is often considered to be a cognitive fallacy, an error in our brains that ascribes more meaning to a random sequence of shots than we rightly should.  People have taken many different approaches to this topic and shis demo shows how one can use statistical testing tools to test the existence of the hot hand effect in basketball.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Did-Klay-Thompson-have-a-Hot-Hand?">Did Klay Thompson have a Hot Hand?<a class="anchor-link" href="#Did-Klay-Thompson-have-a-Hot-Hand?">&#182;</a></h2><p>Let's take a look at Klay Thompson's shooting performance from Dec. 5, 2016 versus the Indiana Pacers.  Klay scored 60 points in 29 minutes of playing time, an unprecedented level of output in such a short amount of time.</p>
+<p>A couple of quick facts:</p>
+<ul>
+<li>Klay took 33 total shots and 14 three-pointers</li>
+<li>He made 21 of his total shots, 8 of which were 3s (that means he made 10 FTs)</li>
+</ul>
+<p>The first thing we look at Klay's sequence of shot results.  We represent this as a string of 0s and 1s (1s representing a make, naturally).  We want to test whether Klay's "hot handedness" led to abnormal results in his shooting.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">klay60</span> <span class="o">=</span> <span class="s1">&#39;110111100101111110010101110010101&#39;</span>
+
+<span class="n">klay60_num_shots</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">klay60</span><span class="p">)</span>
+<span class="n">klay60_num_makes</span> <span class="o">=</span> <span class="n">num_matches</span><span class="p">(</span><span class="n">klay60</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="n">klay60_fgpct</span> <span class="o">=</span> <span class="n">klay60_num_makes</span> <span class="o">/</span> <span class="n">klay60_num_shots</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">FGM: </span><span class="si">{klay60_num_makes}</span><span class="s2"></span>
+<span class="s2">FGA: </span><span class="si">{klay60_num_shots}</span><span class="s2"></span>
+<span class="s2">FG%: </span><span class="si">{klay60_fgpct:.3f}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+FGM: 21
+FGA: 33
+FG%: 0.636
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Hypotheses">Hypotheses<a class="anchor-link" href="#Hypotheses">&#182;</a></h3><p>Our <em>null hypothesis</em>: <strong>there is no hot hand effect</strong>.</p>
+<p>Why do we choose this as the null hypothesis?  The standard approach in testing is to start with the assumption that an effect does not exist and work to try to provide evidence that it does.  For drugs or treatments, this means you start with the assumption that the drug or treatment has no effect on patient outcomes and gather data to show that the drug has a <em>statistically significant</em> impact on outcomes.</p>
+<p>In our case, we will use data to gather evidence to show that the hot hand effect exists.  We do this by building <em>test statistics</em> that we use to try to reject the null hypothesis in favor an <em>alternative hypothesis</em>: the alternative hypothesis <strong>there is a hot hand effect</strong>.</p>
+<h3 id="Test-Statistics">Test Statistics<a class="anchor-link" href="#Test-Statistics">&#182;</a></h3><p>Okay, we know our null and alternative hypotheses.  But how do we test them?  How do we even quantify what we think the hot hand effect might be?</p>
+<p>In some cases, it is obvious what you need to test for.  For drug outcomes, we can directly tie outcome to an important and measurable variable and demonstrate that the drug has a positive impact on that measured variable.</p>
+<p>The hot hand does not seem to have one fixed, uniform definition but is rather like the way Justice Potter Stewart referred to obscenity: I know it when I see it.  That's not good enough here so we're going to try a few things.  The first is looking at streaks.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Our-First-Test-Statistic:-Longest-Streak">Our First Test Statistic: Longest Streak<a class="anchor-link" href="#Our-First-Test-Statistic:-Longest-Streak">&#182;</a></h4><p>First, we're going to look at Klay's longest streak to see if it's longer than we should expect.  His longest stretch of makes was 6 shots.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">klay60_streak</span> <span class="o">=</span> <span class="n">longest_streak</span><span class="p">(</span><span class="n">klay60</span><span class="p">)</span>
+<span class="n">klay60_streak</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[3]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>6</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Distribution-of-Longest-Streak">Distribution of Longest Streak<a class="anchor-link" href="#Distribution-of-Longest-Streak">&#182;</a></h5><p>Now that we know Klay's longest streak was 6 makes, we need to know how 6 stacks up as a streak compared to a player similar to Klay but who definitely does not have a hot hand effect.  That is, we need to compute the distribution of the statistics assuming the null hypothesis, where there is no hot hand, is the proper model.  The distribution of the statistic when assuming the null hypothesis is sometimes called the <em>null distribution</em>.</p>
+<p>How do we create such a player?  One way is by modeling our null player's shots as the result of <em>weighted coin flips</em>.  A weighted coin flip is a coin flip where instead of a 50-50 chance of coming up heads, the coin will come up head with some prescribed probability $p$.  We take the probability as equal to Klay's shooting perentage and the number of heads we get from one simulation will be Klay's made field goal attempts.</p>
+<p>Another important consideration is how many times to flip the coin.  We use the total number of shot's Klay took in the game.  Why?  We want to match the simulated player to Klay and the number of shots taken plays an important role in how likely we are to see certain phenomenon.</p>
+<p>We use a function called <code>coin_flips</code> to simulate the weighted coin flips to determine how many shots a player like Klay makes in a single simulation.  We then create a random shuffling of the makes and misses and compute the longest streak of makes.  Finally, we plot the histogram.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_permutations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay_fgpct</span> <span class="o">=</span> <span class="o">.</span><span class="mi">463</span>
+
+<span class="n">streaks_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_permutations</span><span class="p">):</span>
+    <span class="c1"># Simulate the coin flips</span>
+    <span class="n">fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">n_flips</span><span class="o">=</span><span class="n">klay60_num_shots</span><span class="p">,</span> <span class="n">prob_heads</span><span class="o">=</span><span class="n">klay_fgpct</span><span class="p">)</span>
+    <span class="c1"># Shuffle the shots</span>
+    <span class="n">klay60_shuffled</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="o">*</span><span class="n">fgm</span> <span class="o">+</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="n">klay60_num_shots</span> <span class="o">-</span> <span class="n">fgm</span><span class="p">))</span>
+    <span class="c1"># Compute the longest streak</span>
+    <span class="n">streak_shuff</span> <span class="o">=</span> <span class="n">longest_streak</span><span class="p">(</span><span class="n">klay60_shuffled</span><span class="p">)</span>
+    <span class="n">streaks_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">streak_shuff</span><span class="p">)</span>
+
+<span class="n">streaks_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">streaks_null</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>When we look at the histogram, we find that Klay's streak of 6 is really not that uncommon for a player like him. About 15% of simulations produced a streak at least as long as 6.  As of now, other than the raw totals (perhaps due just to increase shots taken), Klay's performance does not look extraordinary.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">streaks_null</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">17.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Streak distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay60_streak</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed streak&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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ypQppKens2bNGrKyshg6dCgXX3wxo0aNYseOHQDMnTuXSy+9lPT0dK677rpKe08PP/wwEyZMoLj46I8wZmVlkZ6eTnp6Os8991z5/g8++IDRo0cDkJmZSb9+/ejXrx/9+/dn3759PPTQQ6xevZp+/foxe/ZsMjIyGDNmDMOHD2fEiBFH9aLg38tE9OjRg5kzS1e7qdjmqaee4le/+hVLly4lKyuLW265hX79+nHw4EGGDRvGhg0bAHjllVfo27cvF154IVOnTi0/v2PHjsyYMYP09HQuv/zyo+Zvqy0VHxGpFwYMGEBubi49e/bknnvuITMzE4Cf/vSntG/fnqVLl/Lmm28C/16KYNWqVfTq1YtJkyYxb9483n//fcaNG1e++Nzw4cN57733WLVqFWeddVb5bNRlHnjgAXbt2sWcOXOO6T3ddtttPP7446xatSpi5qeeeopZs2aRmZnJ22+/TePGjZk6dSoXXnghmZmZ3H777QBs3LiRefPmlU/RE279+vXMnz+fVatW8cYbb5QXksoMHz6cbt268eyzz5KZmUnjxo3Lj+Xl5TFt2jSWLFnCBx98wPr16yt9v/r27cvcuXMjvka0VHxEpF5o1qwZ77//Pr/5zW9o27YtN910ExkZGZW2jbQUQb9+/Zg1axZff/01UDrH2g9/+EP69u3LokWLjro38sQTT7B3716eeOKJY9bA+e6779i7dy/p6ekA5T2divr06cOUKVN4+umnyc/Pj7gq6iWXXBJxxumyZSIaN25cvkxEbaxfv5709HTatWtHw4YNufrqq/nwww+B0nnjhgwZAkC3bt3Yvn17rV4jnO75SMxoPR8JWkpKCv3796d///507dqVBQsW8OMf//iYdmUzOkPp8ttnn302K1asOKbdbbfdRkZGBueddx4ZGRnlvSko/U84KyurfFbs2rjrrrsYNGgQK1asYPDgwSxevLjSdk2bNo34HBULn5nRsGFDSkpKyvdVtxxFdU466aTy10lJSaGoqOi4ng/U85EYajLtVppMu5Wz//AwTabdWv0JIschOzubzz//vHz7008/5ZRTTgGgefPm7Nu3r9LzunTpwrfffls+A3RhYSFbtmwBoKCggPbt21NYWHjMCLRLL72Uu+66i2uuueaY527VqhUtWrQo74VEGr32xRdf0LVrV37+85/To0cP/vnPf1aZtTIr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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Our-Second-Test-Statistic:-Shooting-Percentage">Our Second Test Statistic: Shooting Percentage<a class="anchor-link" href="#Our-Second-Test-Statistic:-Shooting-Percentage">&#182;</a></h4><p>This is easy.  We're going to test the shooting percentage if he was hot for the whole game instead of for a long streak.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay_fgpct</span> <span class="o">=</span> <span class="o">.</span><span class="mi">463</span>
+
+<span class="n">klay_fgpct_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+    <span class="c1"># Simulate the coin flips</span>
+    <span class="n">fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">n_flips</span><span class="o">=</span><span class="n">klay60_num_shots</span><span class="p">,</span> <span class="n">prob_heads</span><span class="o">=</span><span class="n">klay_fgpct</span><span class="p">)</span>
+    <span class="c1"># Compute shooting percentage</span>
+    <span class="n">klay_fgpct_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fgm</span> <span class="o">/</span> <span class="n">klay60_num_shots</span><span class="p">)</span>
+    
+<span class="n">klay_fgpct_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">klay_fgpct_null</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Distribution-of-Shooting-Percentage">Distribution of Shooting Percentage<a class="anchor-link" href="#Distribution-of-Shooting-Percentage">&#182;</a></h5><p>Naturally the observed shooting percentage for a random player will center around the expected shooting percentage. Interestingly, Klay's shooting percetage is in the top ~4% among the simulations, so that's kind of extreme.  Maybe Klay has nights where he's feeling great and shoots really well.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">klay_fgpct_null</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FG</span><span class="si">% d</span><span class="s1">istribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay_fgpct</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Klay 2016 FG%&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay60_fgpct</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C2&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Klay 60pt Game FG%&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Another-Test-Statistic:-NBA-Jam-On-Fire">Another Test Statistic: NBA Jam On Fire<a class="anchor-link" href="#Another-Test-Statistic:-NBA-Jam-On-Fire">&#182;</a></h4><p>Another way to quantify the hot hand is using a well-known approach proposed by Amos Tversky and his collaborators.  The hot hand of Tversky is similar to the notion of being "on fire" in the old arcade game NBA Jam.  In that game, if you made 3 shots in a row with a player, your player would be on fire (animated flames would denote this).  While on fire (until a miss), the player had an inflated probability of making shots.</p>
+<p>The statistic to capture this affect, called $T_{k, hit}$, is easy to compute:
+\begin{align*}
+  T_{k, hit}
+  &amp; = \mathrm{Prob}(\text{Make $k+1$ shots in a row}\ \mathit{GIVEN}\ \text{Already made $k$ shots in a row})\\
+  &amp; = \frac{\#\{\text{Streaks of $k+1$ makes in a row}\}}{\#\{\text{Streaks of $k$ makes in a row}\}}
+\end{align*}
+If $T_{k, hit}$ is especially high, then the player could experience a hot hand.</p>
+<p>A similar statistic can try to capture a cold hand:
+\begin{align*}
+  T_{k, miss}
+  &amp; = \mathrm{Prob}(\text{Make $k+1$-st shot}\ \mathit{GIVEN}\ \text{Already missed $k$ shots in a row})\\
+  &amp; = \frac{\#\{\text{Streak of $k$ misses followed by make}\}}{\#\{\text{Streaks of $k$ misses in a row}\}}
+\end{align*}
+If the value of $T_{k, miss}$ is especially high, then the player <em>does not</em> experience a cold hand because he will see reversals in his streaks.</p>
+<p>We'll look at $k=2$ but similar results will hold for $k=3$.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">T_2_hit</span> <span class="o">=</span> <span class="n">compute_t_k_hit</span><span class="p">(</span><span class="n">klay60</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">T_2_miss</span> <span class="o">=</span> <span class="n">compute_t_k_miss</span><span class="p">(</span><span class="n">klay60</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">T_2_hit:  </span><span class="si">{T_2_hit:.3f}</span><span class="s2"> </span>
+<span class="s2">T_2_miss: </span><span class="si">{T_2_miss:.3f}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+T_2_hit:  0.636 
+T_2_miss: 1.000
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Okay, we have two numbers, $T_{k, hit}$ and $T_{k, miss}$.  Without context, they do not mean much.  We know that Klay reversed each of streaks of 2 misses.  And we know he shot 63.6% following streaks of 2.  Of course, he shot 63.6% overall on that day.</p>
+<h5 id="Distribution-of-Tversky's-Statistics">Distribution of Tversky's Statistics<a class="anchor-link" href="#Distribution-of-Tversky's-Statistics">&#182;</a></h5><p>We're going to do the same thing as before: we're going to model the player who does not have the hot hand using a weighted coin flip.  The process is identical to the longest streak process.</p>
+<p>Note: In the simulated data, sometimes we might not see any streaks of length 2.  In that case, the statistic does not have a valid value so we just ignore that simulation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay_fgpct</span> <span class="o">=</span> <span class="o">.</span><span class="mi">463</span>
+
+<span class="n">T_2_hit_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">T_2_miss_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+    <span class="c1"># Simulate the coin flips</span>
+    <span class="n">fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">n_flips</span><span class="o">=</span><span class="n">klay60_num_shots</span><span class="p">,</span> <span class="n">prob_heads</span><span class="o">=</span><span class="n">klay_fgpct</span><span class="p">)</span>
+    <span class="c1"># Shuffle the shots</span>
+    <span class="n">klay60_shuffled</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="o">*</span><span class="n">fgm</span> <span class="o">+</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="n">klay60_num_shots</span> <span class="o">-</span> <span class="n">fgm</span><span class="p">))</span>
+    <span class="c1"># Compute the statistics</span>
+    <span class="n">T_2_hit_shuff</span> <span class="o">=</span> <span class="n">compute_t_k_hit</span><span class="p">(</span><span class="n">klay60_shuffled</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">T_2_miss_shuff</span> <span class="o">=</span> <span class="n">compute_t_k_miss</span><span class="p">(</span><span class="n">klay60_shuffled</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">T_2_hit_shuff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">T_2_hit_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T_2_hit_shuff</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">T_2_miss_shuff</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">T_2_miss_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">T_2_miss_shuff</span><span class="p">)</span>
+
+<span class="n">T_2_hit_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_2_hit_null</span><span class="p">)</span>
+<span class="n">T_2_miss_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">T_2_miss_null</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Histograms-of-the-null-distributions">Histograms of the null distributions<a class="anchor-link" href="#Histograms-of-the-null-distributions">&#182;</a></h5><p>We recognize that the observation of Tversky's statistic for Klay's 60 pt game was not extraordinary.  For one, his perceived increased ability to extend his shooting streak is within the possibility of random chance.  His ability to reverse his cold streak seems noteworthy in how he was perfect in avoiding missing 3 shots in a row, however given that for the game he shot 63.6%, we already know he's not going to miss many shots and therefore not likely have a prolonged streak of misses.  We'll return to this issue later.</p>
+<p>Okay, so maybe there's no streakiness in his shooting.  Maybe he was just feeling it all game and shot a much higher percentage than usual.  We'll test that next.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">T_2_hit_null</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$T_{2,hit}$ distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">T_2_hit</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed $T_{2,hit}$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">T_2_miss_null</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$T_{2,miss}$ distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">T_2_miss</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed $T_{2,miss}$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAApQAAAI7CAYAAABShQsHAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEgAACxIB0t1+/AAAIABJREFUeJzs3X10VOW99//Pd3gOD8H6cMCAmnMYCSIVUZRg1gERn4CFSiuKLVgKNq0CtvV4Ws4PBYWjy2rtKthKW6wtP5UjP8sRbvEG5ZaKERQrhaLh4CA0EkxFqwQiARrm+v2RSe48Z8I1yZ6ZvF9rZTHX3nv2/k4uEj5ce197m3NOAAAAwKkKBV0AAAAAUhuBEgAAAF4IlAAAAPBCoAQAAIAXAiUAAAC8dGyrA5WWljKdHAAAIMVlZmZa3WWMUAIAAMALgRIAAABe0jpQRiKRoEtAAtCP6YF+TA+J7Mcet4+u9YW2w89jekimfkzrQAkAAIDWR6AEAACAlzab5Q0AANKDc05lZWWKRqNBl9Kude3aVaWlpQnfbygUUo8ePWRWbzJ3owiUAACgRcrKytSlSxd17tw56FLatS5duqhr164J3++JEydUVlamnj17xv0eAiUAIBBlv/9j0CXgFEWjUcJkGuvcubPKy8tb9B6uoQQAAIAXAiUAAAC8ECgBAEBKOnDggKZMmaJhw4Zp6NCh+tGPfqQTJ06oqKhIubm5QZdXz8MPP6wlS5bUW758+XLl5eUpLy9Pp512WvXruXPnBlDlqeEaSgBIkN5PHwi6hFb3Tl7i9hXat7tWO5o9MHE7R9pzzmnq1Kn69re/rRUrVujkyZO6++67tXDhQs2cObNVjuecUyiU+LG4adOmadq0afr44491zTXXqKCgIOHHaG2MUAIAApGxIL/WF9ASmzZtUpcuXfTNb35TktShQwc99NBDeuaZZ1ReXq6KigrdcccduuyyyzRt2jQdPXpUkvTll19q8uTJuuKKK5Sbm6tVq1ZJkp5//nmNGTNGeXl5+v73v6+TJ0+qqKhIl156qfLz85Wbm6tZs2bpN7/5TXUNNUccG3q/JD322GO65JJLdN1112nPnj1NfqZdu3Zp8ODBCf9etQUCJQAASDm7du3S0KFDay3r1auX+vXrp4qKCkUiEc2YMUNbt25Vz5499dRTT0mSNmzYoD59+ujNN9/Uli1bdNVVV2n37t1atWqV1q9fr4KCAnXo0EErV66UJH344YeaOXOm3nrrLeXn5+u///u/q4/34osv6qabbmr0/du3b9eqVav0xhtvaOXKldq2bVuTn6mwsFCDBg1KyPfn0KFDCdlPvDjlDQAAvLTkWexHF/yq3uUNdd+fiFtK9evXTyNGjJAkTZ48Wb/61a80e/ZsDR48WPPmzdP8+fN17bXXauTIkXr++ee1Y8cOXXnllZKkY8eO6YwzztDIkSPVv39/DR8+XJJ00UUX6bPPPlNJSYk+++wz9e7dW/369dOvf/3rBt//xRdfaPz48crIyJAkXX/99U3WXFhYWL0PSXrppZf0yiuv6MiRI5o6darGjBlT7z2zZ8+udV3mokWLNG/ePM2dO1dPPvmkx3ewZQiUAAAg5eTk5Gj16tW1lh0+fFjFxcXq2LF+vKl66suAAQO0adMmvfLKK1q0aJFGjRql3r17a8qUKZo/f36t9xQVFal79+61lt1www1avXq1Dh48qJtuuklS5fWVDb3/l7/8ZYs+U2Fhoe68887q9oQJEzRhwgQdOnRI8+bNqxcojx49qr1792rhwoX6n//5Hz3++OOqqKjQhg0bFIlEtHjxYs2ZM6dFNZwqTnkDAICUM2rUKJWXl2vFihWSpJMnT2revHm67bbb1K1bNxUXF2vr1q2SpBdeeKF6tLKkpETdunXTLbfcojlz5mjHjh0aNWqUVq9erU8//VSS9MUXX+ijjz5q8LiTJk3SqlWrtHr1at14443VtTT0/pEjR2rt2rUqLy/XkSNHtG7dukY/TzQa1d69ezVwYP3JaY8++miDE4127typiRMn6r777lP37t21c+dODRkyRKeffromT57cZmFSIlACAIAUZGZ65pln9OKLL2rYsGG65JJL1KVLF91///2SpHA4rGXLlumyyy7ToUOHNGPGDEmVo4BVk2ceeeQR3XvvvcrJydG8efN00003aeTIkbrxxhv1ySefNHjcQYMGqaysTH379lWfPn0kqdH3Dx06VJMmTVJeXp5uvvlmDRs2rNHPs3fvXp199tm1nkDknNP8+fN19dVX17teVJK2b9+uUaNGSap8/nZVoHzvvfd04YUXnto39hSZc65NDlRaWto2B6ohEokoHA639WGRYPRjemgP/dg+bht0NGH92BrXzSE+vj+PpaWlyszMTGBFaMjSpUu1YsUKDRs2TEOGDNGECRO0bt06TZs2TZJ01113acmSJfriiy/0s5/9TIcOHdLixYu1bt06rVmzRj/4wQ8aHPGMR1N9nJmZaXWXcQ0lAABAEvrud7+r7373u9XtDRs26Nxzz61u//SnP1UoFNLpp5+uRYsWVS8fN26cxo0b16a1EigBAABSwNixY4MuoVFcQwkAAAAvBEoAAAB44ZQ3ACAQTMIB0gcjlAAAAPBCoAQAAIAXAiUAAAC8cA0lACAQoX27a7Wj2ad2A2YAwSNQAgACkbEgv1abSTpA6uKUNwAAALwQKAEAQMpZvny58vLylJeXp9NOO6369dy5c1v1uA8//LCWLFlS3b7mmmsa3fbQoUNatmxZk/u75pprVFRUpNzc3BbVcejQIT399NP19hUUAiUAAEg506ZNU0FBgVauXKmsrCwVFBSooKBADz/8cJvW8corrzS6rrS0VE899VSD65xzikajTb6/KaWlpfrd734Xdy2tjWsoAQCAl95PH0jo/g5Nz4p72127dmnw4MEJPX5djz32mFasWKEzzzxTWVlZGjp0aPW6rKwsffDBB5o+fboOHDigaDSqe++9V5MmTdIDDzygffv2KS8vT1deeaVmzpypr33ta7rkkku0Y8cOrVy5Urm5udq8ebMqKip0xx13aMeOHcrJydHSpUuVkZGhoqIi3XrrrdqyZYskacmSJSorK1MkElFRUVH1vhcuXKisrCwdOFDZF0888YSeffZZSdLUqVN15513qqioSDfffLNGjBihrVu3qm/fvnruuefUrVs37+8RI5QAACBlFRYWatCgQQnZ16FDh+ot2759u1atWqU33nhDK1eu1LZt2+pts2HDBvXp00dvvvmmtmzZoquuukqSNH/+fGVnZ6ugoEALFy6UJH344YeaOXOm3nrrLZ1zzjnV+4hEIpoxY4a2bt2qnj17NjqyWWX+/Pk699xza+27Zs3PPfecNmzYoFdffVXLly/Xjh076h0/MzNTa9asadk3qRHNBkoz629mG82s0MzeN7O7G9hmtJmVmtn22Nf9CakOAACgCYWFhbrggguq2y+99JLmzJmj6dOn67XXXmvwPbNnz67VXrRokSQ1eP3l5s2bNX78eGVkZKhXr166/vrr620zePBgbdy4UfPnz9fmzZuVmZnZaL39+/fX8OHD6y3v16+fRowYIUmaPHly9YjkqdiyZYvGjx+v7t27q0ePHpowYUL1/s4991x99atflSQNHTpUH3300Skfp6Z4Rigr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paFDh1avy8rK0gcffKDp06frwIEDikajuvfeezVp0iQ98MAD2rdvn/Ly8vQv//Ivev/993XJJZdox44dWrlypc455xxlZWVp8+bNqqio0B133KEdO3YoJydHS5cuVUZGhoqKinTrrbdqy5YtkqQlS5aorKxMkUiket9XXnmlFi5cqKysLB04UNlPTzzxhJ599llJ0tSpU3XnnXeqqKhIN998s0aMGKGtW7eqb9++eu6559StW7e2/6YCAIBWxwhlDYWFhRo0aFAgx96+fbtWrVqlN954QytXrtS2bdvqbbNhwwb16dNHb775prZs2aKrrrpKkjR//nxlZ2eroKBADz74oD788EPNnDlTb731ls4555xa+4hEIpoxY4a2bt2qnj17NjiyWVPNfS9cuLBezc8995w2bNigV199VcuXL9eOHTskqVYNmZmZWrNmjc+3BwAAJLFmA6WZ9TezjWZWaGbvm9ndDWwz2sxKzWx77Ov+1im3dRUWFuqCCy6obr/00kuaM2eOpk+frtdee61F+1q0aFGLtt+8ebPGjx+vjIwM9erVS9dff329bQYPHqyNGzdq/vz52rx5szIzMxvcV//+/TV8+PAG1/Xr108jRoyQJE2ePLl6RPJUbNmyRePHj1f37t3Vo0cPTZgwoXp/5557rr761a9KkoYOHaqPPvrolI8DAACSWzynvCsk3eOc22ZmPSW9a2avOucK62z3hnNuQuJLbDuFhYW68847q9sTJkzQhAkTdOjQIc2bN09jxoyptf0nn3yi6dOn69prr9WuXbt0+eWXa+PGjfre976niooKFRcX6yc/+Yl69eqlsWPHasCAAbXao0ePblF9AwYM0KZNm/TKK69o0aJFGjVqlH70ox/V26579+5x79PMJEkdO3asvt5Sko4dO9ai2urq0qVL9esOHTqovLzca38AACB5NTtC6Zwrcc5ti70+ImmXpPgvTEwR0WhUe/fu1cCB9e82/+ijj2rmzJn1lu/cuVOTJ0/W3XffrcOHD+v222/XjTfeqMOHD2vIkCGKRCLq3Lmz8vPzNXr06HrtmkaOHKm1a9eqvLxcR44c0bp16+odr6SkRN26ddMtt9yiOXPmVJ9e7tmzp44cORLX5ywuLtbWrVslSS+88EL1aOVZZ52lTz/9VJ9//rmOHz+u9evXN7vv3NxcrV27VkePHtWXX36p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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Yet-Another-Statistic:-Sum-of-Klay's-Two-Longest-Streak">Yet Another Statistic: Sum of Klay's Two Longest Streak<a class="anchor-link" href="#Yet-Another-Statistic:-Sum-of-Klay's-Two-Longest-Streak">&#182;</a></h4><p>This is similar to the longest streak but maybe Klay doesn't necessarily generate long streaks but has an ability to get on a streak so he generates multiple longish streaks.  We can try to capture this by the length of his two longest streaks.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">klay60_two_streaks</span> <span class="o">=</span> <span class="n">longest_two_streaks</span><span class="p">(</span><span class="n">klay60</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+<span class="n">klay60_two_streaks</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[11]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>10</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So again, Klay's combined value of 10 (streaks of 6 and 4) is also not especially noteworthy.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay_fgpct</span> <span class="o">=</span> <span class="o">.</span><span class="mi">463</span>
+
+<span class="n">two_streaks_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+    <span class="c1"># Simulate the coin flips</span>
+    <span class="n">fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">n_flips</span><span class="o">=</span><span class="n">klay60_num_shots</span><span class="p">,</span> <span class="n">prob_heads</span><span class="o">=</span><span class="n">klay_fgpct</span><span class="p">)</span>
+    <span class="c1"># Shuffle the shots</span>
+    <span class="n">klay60_shuffled</span> <span class="o">=</span> <span class="n">shuffle</span><span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="o">*</span><span class="n">fgm</span> <span class="o">+</span> <span class="s1">&#39;0&#39;</span><span class="o">*</span><span class="p">(</span><span class="n">klay60_num_shots</span> <span class="o">-</span> <span class="n">fgm</span><span class="p">))</span>
+    <span class="c1"># Compute the statistic</span>
+    <span class="n">two_streak_shuff</span> <span class="o">=</span> <span class="n">longest_two_streaks</span><span class="p">(</span><span class="n">klay60_shuffled</span><span class="p">)</span>
+    <span class="n">two_streaks_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">two_streak_shuff</span><span class="p">)</span>
+
+<span class="n">two_streaks_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">two_streaks_null</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">two_streaks_null</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">17.5</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
+        <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Streak distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay60_two_streaks</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed streak&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Interpretation-of-the-Results">Interpretation of the Results<a class="anchor-link" href="#Interpretation-of-the-Results">&#182;</a></h3><p>The statistics we produced seem to show that while the game was noteworthy for the volume of shooting and scoring in such a compressed time frame, the actually efficiency numbers were not particularly extraordinary for a player of Klay's ability.</p>
+<p>However, we should note a few things:</p>
+<ul>
+<li>We've lumped together 2s and 3s: if you reran this analysis separating the 2s and 3s, you wouldn't get a different or special view.  Klay shoots about 42% from three so he's already really good and will just have games where the shots fall.</li>
+<li>The statistics do seem on the extreme end and we kind of wrote that off saying that they weren't so extreme to convince us Klay had a special night.  In fact, the story is actually a bit more damning for the hot hand as we'll see below.</li>
+</ul>
+<p>Klay's 60 point game was not one single game but actually just one of many games.  He's had many opportunities to shoot and put up gawdy numbers (~300 since Steve Kerr started coaching for the Warriors).  Given that he's had about 300 opportunities, if we observe a statistic that says it should happen about 1 in 100 times for a random no-hot-hand weighted coin flip player, then it should have happened about 3 times over 300 games.  The fact that Klay has had tons of games in order to put up gawdy numbers means that by picking the most gawdiest, we've accidentally cherry-picked this game and our standard for extremeness needs to be much higher.</p>
+<p>Let's actually look at how often Klay has an extreme looking performance and compare to what would be predicted by the weighted coin flip model.</p>
+<p>Here are some numbers to put this in context (see cells below for the computation):</p>
+<ul>
+<li>Klay shot 68.4% on 19 two-point attempts in the 60pt game.  From 2014-15 to 2017-18, he had 21 games where he shot at least 15 2-pt shots and in 1 of those (this 60 pt game) he shot at least 68.4%.  In our coin flip model, using his 2-pt pct of 49% and those 21 games, we'd expect about 1 game shooting at least 68.4%.  </li>
+<li>Klay shot 57.1% on 14 three-point attempts in the game.  In that same Kerr-era time span for the Warriors, he had 74 games where he had at least 10 3-pt shot attempts and in 15 of those games he shot at least 57.1% from 3.  In our coin flip model, using his 3-pt pct of 42% and 74 games of 10 3pt attempts, we'd expect about 15 games shooting at least 57.1%.  </li>
+</ul>
+<p>So even though this game was a bit extreme, it was not that extreme compared to other Klay performances.  And when you factor in how often he plays and has an opportunity to have a gawdy shooting night, his performances match up with what'd you expect from a player shooting with weighted coin flips.</p>
+<p>Now, he took 33 shots and it's his only game with at least 29 shots.  That's fairly special but is it really that special given that the team was passing the ball to Klay and allowing him to shoot?  This would be like riding out your luck at a casino game.  You perceive a run of luck and decided to keep playing and while the run may last longer than usual, it wasn't anything but a produce of luck.</p>
+<p>The takeaway: Klay's shooting performances for his career are just not out of line with what we expect from our coin flip model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay60_2fgpct</span> <span class="o">=</span> <span class="mf">0.684</span>
+<span class="n">klay_2fgpct</span> <span class="o">=</span> <span class="mf">0.49</span>
+<span class="n">klay_2fga</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">n_games</span> <span class="o">=</span> <span class="mi">21</span>
+
+<span class="n">klay_2fgpct_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+    <span class="n">klay_2fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">klay_2fga</span><span class="p">,</span> <span class="n">klay_2fgpct</span><span class="p">)</span>
+    <span class="n">klay_2fgpct_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">klay_2fgm</span> <span class="o">/</span> <span class="n">klay_2fga</span><span class="p">)</span>
+    
+<span class="n">klay_2fgpct_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">klay_2fgpct_null</span><span class="p">)</span>
+
+<span class="n">sims_greater_than_Klay60_2s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">klay_2fgpct_null</span> <span class="o">&gt;=</span> <span class="n">klay60_2fgpct</span><span class="p">))</span>
+<span class="n">frac_greater_than_Klay60_2s</span> <span class="o">=</span> <span class="n">sims_greater_than_Klay60_2s</span> <span class="o">/</span> <span class="n">n_simulations</span>
+<span class="n">extreme_2pt_games_per_G</span> <span class="o">=</span> <span class="n">frac_greater_than_Klay60_2s</span> <span class="o">*</span> <span class="n">n_games</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Sims more extreme than Klay 60:       </span><span class="si">{sims_greater_than_Klay60_2s}</span><span class="s2"></span>
+<span class="s2">Fraction of sims more extreme:        </span><span class="si">{frac_greater_than_Klay60_2s:.2f}</span><span class="s2"></span>
+<span class="s2">Extreme 2pt Games per </span><span class="si">{n_games}</span><span class="s2"> Team Games:  </span><span class="si">{extreme_2pt_games_per_G:.2f}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Sims more extreme than Klay 60:       506
+Fraction of sims more extreme:        0.05
+Extreme 2pt Games per 21 Team Games:  1.06
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">n_simulations</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">klay60_3fgpct</span> <span class="o">=</span> <span class="mf">0.571</span>
+<span class="n">klay_3fgpct</span> <span class="o">=</span> <span class="mf">0.42</span>
+<span class="n">klay_3fga</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_games</span> <span class="o">=</span> <span class="mi">74</span>
+
+<span class="n">klay_3fgpct_null</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+    <span class="n">klay_3fgm</span> <span class="o">=</span> <span class="n">coin_flips</span><span class="p">(</span><span class="n">klay_3fga</span><span class="p">,</span> <span class="n">klay_3fgpct</span><span class="p">)</span>
+    <span class="n">klay_3fgpct_null</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">klay_3fgm</span> <span class="o">/</span> <span class="n">klay_3fga</span><span class="p">)</span>
+<span class="n">klay_3fgpct_null</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">klay_3fgpct_null</span><span class="p">)</span>
+
+<span class="n">sims_greater_than_Klay60_3s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">klay_3fgpct_null</span> <span class="o">&gt;=</span> <span class="n">klay60_3fgpct</span><span class="p">))</span>
+<span class="n">frac_greater_than_Klay60_3s</span> <span class="o">=</span> <span class="n">sims_greater_than_Klay60_3s</span> <span class="o">/</span> <span class="n">n_simulations</span>
+<span class="n">extreme_3pt_games_per_G</span> <span class="o">=</span> <span class="n">frac_greater_than_Klay60_3s</span> <span class="o">*</span> <span class="n">n_games</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Sims more extreme than Klay 60:       </span><span class="si">{sims_greater_than_Klay60_3s}</span><span class="s2"></span>
+<span class="s2">Fraction of sims more extreme:        </span><span class="si">{frac_greater_than_Klay60_3s:.2f}</span><span class="s2"></span>
+<span class="s2">Extreme 3pt Games per </span><span class="si">{n_games}</span><span class="s2"> Team Games:  </span><span class="si">{extreme_3pt_games_per_G:.2f}</span><span class="s2"></span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Sims more extreme than Klay 60:       2035
+Fraction of sims more extreme:        0.20
+Extreme 3pt Games per 74 Team Games:  15.06
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Does-Klay-Show-the-Hot-Hand-over-a-Season?">Does Klay Show the Hot Hand over a Season?<a class="anchor-link" href="#Does-Klay-Show-the-Hot-Hand-over-a-Season?">&#182;</a></h2><p>In one of Klay's most stellar games, it appears that any potential hot handedness can be chalked up to luck producing a performance that we as humans think is more extreme or impressive than it actually is.</p>
+<p>If Klay really has a hot hand effect, he'll routinely show it over the season.  We can try to detect this by looking at Tversky's statistics but computed across all of Klay's games for a season.  Here's an explanation for the setup:</p>
+<ol>
+<li>Take all of Klay's 3pt shots in a given year and look at game's 3pt shot sequence.  We restrict to 3pt shots this time because we want to be a bit more judicious about not mixing different shot results which can have drastically different expected make probabilities.</li>
+<li>For each game, we compute 4 quantities:
+\begin{gather*}
+ \#\{\text{Streaks of $k+1$ makes in a row}\},\ 
+ \#\{\text{Streaks of $k$ makes in a row}\},\\
+ \#\{\text{Streak of $k$ misses followed by make}\},\ 
+ \#\{\text{Streaks of $k$ misses in a row}\}
+\end{gather*}
+for $k=1, 2, 3$.  We add these to running totals for the Klay's season.</li>
+<li>To generate the null distribution, we take each game's shot sequence and randomly shuffle it 500 times.  For each shuffling we compute the statistics and add to a set of 500 running totals.  This means we keep the number of shots made the same for each game.  Why do we do this instead of using the weighted coin flip model?  We actually could have done this before for Klay's performance but the conclusions wouldn't have changed.  We're using it now because it's easier to implement but is still useful: we've randomized the sequence of shot results holding the number of makes fixed so we can see if there is anything special in the sequencing.</li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Data">Data<a class="anchor-link" href="#Data">&#182;</a></h3><p>Producing this data takes a bit of effort so I've gone ahead and done it already and stored it CSV format.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">klay_season_hot_hand</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;klay_season_hot_hand.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">])</span>
+<span class="n">klay_season_hot_hand_null</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;klay_season_hot_hand_null.csv.gz&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">])</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Null-Distributions">Null Distributions<a class="anchor-link" href="#Null-Distributions">&#182;</a></h3><p>We can look at each year but the conclusion is going to be the same no matter what: there is no strong evidence that there is any hot hand sequencing in Klay's 3pt shooting.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">year</span> <span class="o">=</span> <span class="mi">2016</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">klay_T_3_hit</span> <span class="o">=</span> <span class="n">klay_season_hot_hand</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">year</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="s1">&#39;t_k_hit&#39;</span><span class="p">]</span>
+<span class="n">klay_T_3_hit_null</span> <span class="o">=</span> <span class="n">klay_season_hot_hand_null</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">year</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="s1">&#39;t_k_hit&#39;</span><span class="p">]</span>
+<span class="n">klay_T_3_miss</span> <span class="o">=</span> <span class="n">klay_season_hot_hand</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">year</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="s1">&#39;t_k_miss&#39;</span><span class="p">]</span>
+<span class="n">klay_T_3_miss_null</span> <span class="o">=</span> <span class="n">klay_season_hot_hand_null</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">year</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="s1">&#39;t_k_miss&#39;</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Year: </span><span class="si">{year}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">klay_T_3_hit_null</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$T_{3,hit}$ distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay_T_3_hit</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed $T_{3,hit}$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">klay_T_3_miss_null</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;$T_{3,miss}$ distribution&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">klay_T_3_miss</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Observed $T_{3,miss}$&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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o8F1paWlWr58eZ3lzjlVVlY2uX9j6jt2qMeKBG6sAQAA9eq+4lBEj3dsWnqzt929e7f69u0b0ff38dhjj2n16tXq0aOH0tPT1b9//5p16enp+uMf/6hp06bp0KFDqqys1Ny5czVhwgR997vf1f79+5Wbm6vPfvazev/993XdddepqKhIa9as0WWXXab09HRt3bpVFRUVmjFjhoqKitS7d289/fTTSklJ0YEDB3TnnXdq27ZtkqSlS5eqrKxMgUCg5tjDhg3TwoULlZ6erkOHqvrpqaee0vPPPy9Jmjx5su69914dOHBAd9xxhwYNGqSCggL16tVLL7zwgjp37hz2d8RIJAAAiDnFxcXq06dPVN77vffe07p16/T2229rzZo1KiwsrLPN5s2b1bNnT73zzjvatm2bRowYIUlasGCBsrKylJ+fr+9973vau3ev7rnnHr377ru67LLLgo4RCAQ0ffp0FRQUKDU1td4RzNpqH3vhwoV1an7hhRe0efNmbdq0SatWrVJRUZEkBdWQlpamV155JZyvp0aTIdLMnjWzI2a2q551D5iZM7OLI1INAACAqkLk1VdfXdPes2eP7r//fk2ZMqXJsHW+RYsWeW2/detWjR07VikpKerWrZtuueWWOtv07dtXb775phYsWKCtW7cqLS2t3mNlZmZq4MCB9a7LyMjQoEGDJEl5eXk1I4+h2LZtm8aOHasuXbqoa9euuvXWW2uOd/nll+tzn/ucJKl///46ePBgyO9TW3NGIldKuvn8hWaWKWm0pMhUAgAAUO38kcicnBwtWbJEK1eu1Pbt2+ts/+GHH2rMmDH6yU9+oq9//etasWKFpkyZom3btqmiokIlJSV64IEHNH/+fL311lsqKSnR7Nmza9q+rrzySm3ZskVXX321Fi1apEcffbTe7bp06dLsY5qZJKl9+/Y1109K0pkzZ7zrq61jx441r9u1a6eKioqwjndOkyHSObdF0sf1rFoi6SFJLiKVAAAASKqsrNS+ffuUkxM8o9Vrr72mvLw8jRo1qs4+O3fuVF5enubMmaPjx49r6tSpGj9+vI4fP65rr71WgUBAycnJmjlzpm666SYFAgF16NChpl3bkCFDtGHDBp0+fVonTpzQxo0b67zf4cOH1blzZ331q1/V7Nmza04dp6am6sSJE836nCUlJSooKJAkrV27tmZU8pJL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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-Easy/Hard-is-it-to-Detect-the-Hot-Hand?">How Easy/Hard is it to Detect the Hot Hand?<a class="anchor-link" href="#How-Easy/Hard-is-it-to-Detect-the-Hot-Hand?">&#182;</a></h2><p>We've worked hard to try to detect the hot hand, but given that we seem to not have found anything, we should wonder, how hard is it to actually detect a hot hand using the statistics we have been using.</p>
+<p>To do this, we're going to simulate a hot hand player compared to a non-hot hand player (ie. a weighted coin flip) and compare how the distribution of the statistics to see just how different they are.</p>
+<p>The extent that a test statistic can detect an effect is known as <em>statistical power</em> and is incredibly important.  There are three things that drive power: sample size, effect size, quality of the statistic.  We're not dealing with complicated statistics so the last one doesn't really apply.  The first two are always important.</p>
+<p>A lot of studies that are reported on in popular press often have tests with very little power and this is often due to small sample sizes.  The importance of power is that if a study has low power but is reporting a result, you should be very suspicious of the result because it's more likely something was done wrong instead of an actual effect being detected.</p>
+<h3 id="Simulating-a-Hot-Hand">Simulating a Hot Hand<a class="anchor-link" href="#Simulating-a-Hot-Hand">&#182;</a></h3><p>Inspired by Tversky's statistic, let's simulate a player that should be well estimated by that statistic.  The normal shooting percentage for the player will be .35 while the hot shooting percentage will be .8.  The player will be hot after two makes in a row.  When the player misses, he reverts to normal.  The player starts the game normal.</p>
+<p>The seasonal average for this player will be about .45 so that is the shooting percentage we take for the coin flip player.</p>
+<p>I chose these values because the difference in shooting between hot and normal is incredibly large.  If we can't detect this, then we're in trouble.</p>
+<h3 id="Distributions-of-Statistics">Distributions of Statistics<a class="anchor-link" href="#Distributions-of-Statistics">&#182;</a></h3><h4 id="Hard-to-Detect:-One-game">Hard to Detect: One game<a class="anchor-link" href="#Hard-to-Detect:-One-game">&#182;</a></h4><p>I generated 50,000 "games" where each player took 14 shots and for each game computed Tversky's statistic for $k=2$.</p>
+<p>The comparison of the distributions for the hot hand player and the non-hot hand player are as follows:</p>
+<p><img src="hot_hand_1.png" alt="hot_hand_1.png"></p>
+<p>The way to interpret the histograms is that if we observed a game from a hot hand player, the observed value of the statistic would usually have a value that is entirely plausible from the coin flip player.  This means that it is really hard to distinguish between the hot hand player and the coin flip player.  It's almost assured that we wouldn't be able to detect the hot hand effect.</p>
+<p>In an ideal world, the distribution for the hot hand player would be far to the right of the the coin flip player.<br>
+So we see that the effect in an individual game is basically impossible to reliably detect.  The next simulations show easier detections.</p>
+<h4 id="Easy-to-Detect:-Lots-of-Games">Easy to Detect: Lots of Games<a class="anchor-link" href="#Easy-to-Detect:-Lots-of-Games">&#182;</a></h4><p>This time, I simulated 1000 "seasons" of 82 "games" where each player took 8 shots.</p>
+<p><img src="hot_hand_4.png" alt="hot_hand_4.png"></p>
+<p>We see that observing the player over the course of a season will yield basically perfect detection for a hot hand effect of this size.</p>
+<h4 id="Still-Easy-to-Detect:-Smaller-Effect-Size">Still Easy to Detect: Smaller Effect Size<a class="anchor-link" href="#Still-Easy-to-Detect:-Smaller-Effect-Size">&#182;</a></h4><p>Again I simulated 1000 "seasons" of 82 "games" where each player took 8 shots.  But this time, $p_{hot} = .6$ and $p_{normal} = .42$.  This still corresponds to a seasonal average of about .45.</p>
+<p><img src="hot_hand_5.png" alt="hot_hand_5.png"></p>
+<p>Even though the effect size is perhaps more reasonable, observing over the course of the season still makes the effect easy to detect.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summary-of-the-Hot-Hand">Summary of the Hot Hand<a class="anchor-link" href="#Summary-of-the-Hot-Hand">&#182;</a></h2><p>Here's what we have determined: a player who has a reputation as a streaky shooter actually has shooting performances which are in line with what we'd expect from a simple weighted coin flip model.  They're also in line with randomized shuffling instead of weighted coin flips.</p>
+<p>Other studies indicate that recent performance (in baseball, over a 1 week period; in basketball, previous shot attempts) has a small amount predictive power.  In the NBA, an extra make in the previous 4 shots can lead to a 1.2% increase in make percentage.  This demo does not aim to refute those conclusions.</p>
+<p>However, ask yourself this: what do <em>you</em> think of when you hear an announcer say a player is hot?  Compare that to the claims of predictive power from recent performance.  The usual mental model of a hot hand effect is likely not a small uptick in percentage but rather one where a player becomes unstoppable when they're hot.  Observed data does not back up our mental model of hot shooting yet when we look at whether it would even be possible over a season to detect a moderate hot hand effect, we see that Tversky's statistic is in fact pretty powerful.</p>
+<p>It's quite likely that if the effect were to exist, it would either be fairly small so that Tversky's statistic could not detect it, and thus not particularly consequential.  Or it would be large but more specialized and rare and thus more hidden than how it's conventionally been framed (turns on whenever a shooter makes multiple shots).</p>
+<p>This all goes with a general rule of statistics: if an effect really is there and big, you'll know it because it'll show up in the data and practically be punching you in the face to announce it's presence.</p>
+
+</div>
+</div>
+</div>
+        </div>
+      </div>
+    </body>
+  
+ 
+
+
+</html>

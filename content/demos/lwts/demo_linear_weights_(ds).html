@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8" />
+    
+    <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+
+    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <link rel="stylesheet" href="../../assets/css/notebook.css">
+
+  <!-- Loading mathjax macro -->
+    <!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+
+    
+
+    <body>
+      <div tabindex="-1" id="notebook" class="border-box-sizing">
+        <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Demo---Linear-Weights">Demo - Linear Weights<a class="anchor-link" href="#Demo---Linear-Weights">&#182;</a></h1><p>In this demo, use the RE24 values computed in the demo on RE24 to empirically derive weights or expected values for hitting events known as <em>Linear Weights</em> or <em>LWTS</em>.  We use then show how LWTS forms the basis for the advanced statistic <em>wOBA</em> (Weighted On-Base Average) we saw in the offensive metrics demo.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">run</span> ../../utils/notebook_setup.py
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Adding datascience helper tools to path...
+Setting up Matplotlib...
+Matplotlib imported as mpl
+Matplotlib.pyplot imported as plt
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datascience</span> <span class="k">import</span> <span class="n">Table</span>
+<span class="kn">from</span> <span class="nn">datascience.util</span> <span class="k">import</span> <span class="n">table_apply</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># custom functions that will help do some simple tasks</span>
+<span class="kn">from</span> <span class="nn">datascience_utils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">datascience_stats</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">datascience_topic</span> <span class="k">import</span> <span class="n">fast_run_expectancy</span><span class="p">,</span> <span class="n">most_common_lineup_position</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h5 id="Load-RE24-Data">Load RE24 Data<a class="anchor-link" href="#Load-RE24-Data">&#182;</a></h5>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">re24</span> <span class="o">=</span> <span class="n">Table</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s1">&#39;re24_vals_2001.csv&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+<span class="n">re24</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+
+<div class="output_html rendered_html output_subarea ">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>Event_Type</th> <th>RE24</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1B        </td> <td>0.395324</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.612075</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.892794</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.879509</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.395324</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.566407</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.188054</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.268103</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.395324</td>
+        </tr>
+    </tbody>
+        <tr>
+            <td>1B        </td> <td>0.612075</td>
+        </tr>
+    </tbody>
+</table>
+<p>... (167876 rows omitted)</p
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Linear-Weights-and-wOBA">Linear Weights and wOBA<a class="anchor-link" href="#Linear-Weights-and-wOBA">&#182;</a></h2><p>In the demo on RE24, we directly attributing RE24 to a player.  Instead, we can try to even out their perfomance by weighting each event the same by completely ignoring the context of the event.  This allows us to avoid the pitfalls we saw previously where it seemed nearly impossible to tell whether environment or ability was driving production.  By doing this, we completely remove environment in which the hitter was hitting in and get a performance compared to overall average!</p>
+<p>We'll use the RE24 values to construct the Linear Weights values as well as the offensive metric wOBA (Weighted On Base Average).</p>
+<p>For each <code>Event_Type</code> we can compute the average value for each type of event.</p>
+<p>A single can have different RE24 outcomes according to different out/baserunner situations so the average weights these outcome values according to the frequency with which the situations occur.  This way, we do not under value a single that occurs with no runners on and doesn't score a run or over value a single that occurs with the bases loaded.  We want them to be valued equally so we average to smooth everything out.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Linear-Weights-(LWTS)">Linear Weights (LWTS)<a class="anchor-link" href="#Linear-Weights-(LWTS)">&#182;</a></h3><p>Group and average to get the net expected runs above average for each event.  Notice how Fielder's choice, generic outs, and strikeouts all have negative values.  Neither of these three events is likely to generate an improvement in baserunner position and all three increase the number of outs.</p>
+<p>The value of the homerun is more than 1 run because in addition to the one run guaranteed to score (the batter), there is the possibility of runners on base.</p>
+<p>Note also that a strikeout is basically the same as a generic out.  This seems counter-intuitive since the strikeout means the ball isn't put in play.  What about the breakdown of event types suggests that this isn't as strange as it might seem?  For example, for a batter with 2 strikes, what could potentially happen if the ball is put into play versus a strikeout?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">to_weights_table</span><span class="p">(</span><span class="n">wts</span><span class="p">):</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">wts</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">Table</span><span class="p">()</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">lwts</span> <span class="o">=</span> <span class="n">re24</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s1">&#39;Event_Type&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">)</span>
+<span class="n">lwts</span><span class="o">.</span><span class="n">relabel</span><span class="p">(</span><span class="s1">&#39;RE24 mean&#39;</span><span class="p">,</span> <span class="s1">&#39;RE24&#39;</span><span class="p">)</span>
+<span class="n">lwts</span> <span class="o">=</span> <span class="n">to_weights_table</span><span class="p">(</span><span class="n">lwts</span><span class="p">)</span>
+<span class="n">lwts</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[4]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>1B</th> <th>2B</th> <th>3B</th> <th>BB</th> <th>FC</th> <th>Generic out</th> <th>HBP</th> <th>HR</th> <th>IBB</th> <th>Interference</th> <th>K</th> <th>RBOE</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>0.462439</td> <td>0.780509</td> <td>1.08518</td> <td>0.305952</td> <td>-0.318694</td> <td>-0.287365  </td> <td>0.336461</td> <td>1.38315</td> <td>0.159598</td> <td>0.486075    </td> <td>-0.292166</td> <td>0.51757</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><em>Question</em></p>
+<ul>
+<li>Why is an intentional walk worth less than a regular walk?  Think about who is receiving an intentional walk.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="wOBA">wOBA<a class="anchor-link" href="#wOBA">&#182;</a></h3><p>wOBA weights are obtained by first subtracting out the value of a generic out and then scaling the weights by what is known as the "wOBA Scale".  The scaling is for interpretive purposes to make wOBA appear in a similar range to OBP.</p>
+<p>The wOBA scale from FanGraphs for 2001 is 1.182.  Using that, we can compute the wOBA weights.  For interpretive purposes, we then scale by the wOBA scale factor.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">woba_scale</span> <span class="o">=</span> <span class="mf">1.182</span>
+<span class="n">woba_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;BB&#39;</span><span class="p">,</span> <span class="s1">&#39;HBP&#39;</span><span class="p">,</span> <span class="s1">&#39;1B&#39;</span><span class="p">,</span> <span class="s1">&#39;2B&#39;</span><span class="p">,</span> <span class="s1">&#39;3B&#39;</span><span class="p">,</span> <span class="s1">&#39;HR&#39;</span><span class="p">]</span>
+<span class="n">out_val</span> <span class="o">=</span> <span class="n">lwts</span><span class="p">[</span><span class="s1">&#39;Generic out&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">woba_wt</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">woba_scale</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">out_val</span><span class="p">)</span>
+
+<span class="n">wOBA_weights</span> <span class="o">=</span> <span class="n">table_apply</span><span class="p">(</span><span class="n">lwts</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="n">woba_cols</span><span class="p">),</span> <span class="n">woba_wt</span><span class="p">)</span>
+<span class="n">wOBA_weights</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>BB</th> <th>HBP</th> <th>1B</th> <th>2B</th> <th>3B</th> <th>HR</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>0.701301</td> <td>0.737362</td> <td>0.886269</td> <td>1.26223</td> <td>1.62235</td> <td>1.97455</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Barry-Bonds-Example">Barry Bonds Example<a class="anchor-link" href="#Barry-Bonds-Example">&#182;</a></h3><p>Let's return to Barry Bonds' monumental 2001 season and use his batting line to estimate his Batting Runs/wRAA and wOBA values.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">barry_bonds</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span><span class="o">.</span><span class="n">with_columns</span><span class="p">({</span>
+    <span class="s1">&#39;1B&#39;</span><span class="p">:</span> <span class="mi">49</span><span class="p">,</span>
+    <span class="s1">&#39;2B&#39;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="s1">&#39;3B&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;HR&#39;</span><span class="p">:</span> <span class="mi">73</span><span class="p">,</span>
+    <span class="s1">&#39;BB&#39;</span><span class="p">:</span> <span class="mi">177</span><span class="p">,</span>
+    <span class="s1">&#39;IBB&#39;</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span>
+    <span class="s1">&#39;HBP&#39;</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span>
+    <span class="s1">&#39;Generic out&#39;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span> <span class="c1"># Added generic out and strikeout since they are basically the same value</span>
+    <span class="s1">&#39;PA&#39;</span><span class="p">:</span> <span class="mi">664</span>
+<span class="p">})</span>
+<span class="n">barry_bonds</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[6]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>1B</th> <th>2B</th> <th>3B</th> <th>HR</th> <th>BB</th> <th>IBB</th> <th>HBP</th> <th>Generic out</th> <th>PA</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>49  </td> <td>32  </td> <td>2   </td> <td>73  </td> <td>177 </td> <td>35  </td> <td>9   </td> <td>320        </td> <td>664 </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Bonds-Batting-Runs/wRAA">Bonds Batting Runs/wRAA<a class="anchor-link" href="#Bonds-Batting-Runs/wRAA">&#182;</a></h4><p>Using LWTS, we compute Bonds' Batting Runs value.  We do this by multipling the LWTS by his event counts and summing.  Batting Runs is sometimes also called wRAA (Runs Above Average).  Bonds' Batting Runs was 121 runs above average.  Bonds produced an obscene 121 runs above an average player.</p>
+<p>Average players are nothing to sneeze at.  We are not talking about some Triple A call-up.  We are talking about a perfectly fine and capable MLB player.  And Bonds' produced 121 more runs above average than that player.</p>
+<p>We previously estimated 10 runs was worth 1 win in expectation.  This suggests Bonds was worth somewhere around 12 wins above the average player.  Baseball Reference estimates Bonds worth about 9.9 wins above the average player using their own methodology.  Either way, as we should suspect, Bonds' offensive contributions are other worldly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bonds_wraa_vals</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span><span class="o">.</span><span class="n">with_columns</span><span class="p">({</span>
+    <span class="n">col</span><span class="p">:</span> <span class="n">lwts</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">*</span> <span class="n">barry_bonds</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">lwts</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">barry_bonds</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">bonds_wraa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">bonds_wraa_vals</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">bonds_wraa_vals</span><span class="o">.</span><span class="n">labels</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Barry Bonds 2001 Batting Runs/wRAA: </span><span class="si">{bonds_wraa:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">bonds_wraa_vals</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Barry Bonds 2001 Batting Runs/wRAA: 121.587
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>HR</th> <th>BB</th> <th>2B</th> <th>Generic out</th> <th>1B</th> <th>IBB</th> <th>3B</th> <th>HBP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>100.97</td> <td>54.1536</td> <td>24.9763</td> <td>-91.9568   </td> <td>22.6595</td> <td>5.58592</td> <td>2.17036</td> <td>3.02815</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><em>Questions</em></p>
+<ul>
+<li>For a hitter, what is the difference between Total RE24 and Batting Runs/wRAA?  Which one uses the raw, observed values of RE24 and which one replaces those observed, situation depdendent values with average values?  </li>
+<li>What does it mean for a hitter to have a higher RE24 value than BR/wRAA?  What about lower, as in Bonds' case?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Bonds-wOBA">Bonds wOBA<a class="anchor-link" href="#Bonds-wOBA">&#182;</a></h4><p>Bonds' wOBA value is estimated to be 0.545.  Since we use the wOBA scale to place wOBA on a similar scale to OBP, we can use the fact as follows.</p>
+<p>Ignoring the yearly variation in OBP, the highest single season OBP was Bonds in 2004 at 0.610. Number 5 all time was Babe Ruth at 0.545.  In terms of wOBA, Bonds in 2001 is situated relative to the rest of the league like a hitter with a 0.545 OBP would be relative to the rest of the league.  And a 0.545 OBP would be good for Top 5 all time seasons.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labels</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">wOBA_weights</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">barry_bonds</span><span class="o">.</span><span class="n">labels</span><span class="p">)</span>
+<span class="n">bonds_woba_vals</span> <span class="o">=</span> <span class="n">Table</span><span class="p">()</span><span class="o">.</span><span class="n">with_columns</span><span class="p">({</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">wOBA_weights</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">*</span> <span class="n">barry_bonds</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span>
+<span class="p">})</span>
+<span class="n">bonds_woba</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">bonds_woba_vals</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">bonds_woba_vals</span><span class="o">.</span><span class="n">labels</span><span class="p">])</span> <span class="o">/</span> <span class="n">barry_bonds</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Barry Bonds 2001 wOBA: </span><span class="si">{bonds_woba:.3f}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">bonds_woba_vals</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Barry Bonds 2001 wOBA: 0.545
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[8]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table border="1" class="dataframe">
+    <thead>
+        <tr>
+            <th>HR</th> <th>BB</th> <th>2B</th> <th>1B</th> <th>3B</th> <th>HBP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>144.142</td> <td>124.13</td> <td>40.3913</td> <td>43.4272</td> <td>3.24469</td> <td>6.63626</td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+        </div>
+      </div>
+    </body>
+  
+ 
+
+
+</html>

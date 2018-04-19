@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="utf-8" />
+    
+    <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+    
+
+    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <link rel="stylesheet" href="../../assets/css/notebook.css">
+
+  <!-- Loading mathjax macro -->
+    <!-- Load mathjax -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+    <!-- MathJax configuration -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+            processEscapes: true,
+            processEnvironments: true
+        },
+        // Center justify equations in code and markdown cells. Elsewhere
+        // we use CSS to left justify single line equations in code cells.
+        displayAlign: 'center',
+        "HTML-CSS": {
+            styles: {'.MathJax_Display': {"margin": 0}},
+            linebreaks: { automatic: true }
+        }
+    });
+    </script>
+    <!-- End of mathjax configuration --></head>
+
+    
+
+    <body>
+      <div tabindex="-1" id="notebook" class="border-box-sizing">
+        <div class="container" id="notebook-container">
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Extracting-Plays">Extracting Plays<a class="anchor-link" href="#Extracting-Plays">&#182;</a></h1><p>This notebook is an optional companion to the homework and shows how the play-by-play data was handled to extract the necessary components for modeling 4th downs.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="NFL-PxP-Data">NFL PxP Data<a class="anchor-link" href="#NFL-PxP-Data">&#182;</a></h2><p>NFL play-by-play data is loaded from csv format.</p>
+<p>Below is a list of avaible columns we will use.  Many are self explanatory so when needed, a description will be given.  Note, there are many more fields available that we will not use.</p>
+<ul>
+<li>GameID</li>
+<li>Drive - index given the # of the drive within the game</li>
+<li>qtr</li>
+<li>down</li>
+<li>yrdline100 - the yard line expressed on a scale of 1 to 99 instead of 1 to 50 and back to 1.</li>
+<li>ydstogo - yards to go for a first down</li>
+<li>Yards.Gained - yards gained on the play</li>
+<li>posteam - possessing team</li>
+<li>DefensiveTeam - defensive team</li>
+<li><del>desc - play description</del>  &lt;-- Had to drop this due to memory problems</li>
+<li>PlayType - label for what type of play</li>
+<li>Touchdown - 0,1 indicating if a TD was scored</li>
+<li>FieldGoalResult - label indicating good, blocked, or no good.</li>
+<li>FieldGoalDistance</li>
+<li>PosTeamScore - Score of the possessing team.  This will flip when the possession flips.</li>
+<li>DefTeamScore - Score of the defensive team.  This will flip when the possession flips.</li>
+<li>HomeTeam</li>
+<li>AwayTeam</li>
+</ul>
+<p>A few convenient data fields are added to easy computation of possession value.</p>
+<ul>
+<li>half</li>
+<li>yrdregion - region of the field: Inside the 10, 10 to 20, and beyond 20.</li>
+<li>HomeScore &amp; AwayScore - The score of the possession and defensive teams are given.  This changes as the ball changes possession</li>
+<li>nextposteam - The team possessing the ball in the next play. Non-plays are ignored</li>
+<li>nextyrdline100 - Where the ball is on the next play. Non-plays are ignored</li>
+<li>nextdown - The down for the next play</li>
+<li>1stdownconversion - Whether the current play converted a first down (0 or 1 value)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/nfl_pxp_2009_2016.csv.gz&#39;</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pxp</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[3]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GameID</th>
+      <th>Drive</th>
+      <th>qtr</th>
+      <th>down</th>
+      <th>yrdline100</th>
+      <th>ydstogo</th>
+      <th>posteam</th>
+      <th>DefensiveTeam</th>
+      <th>Yards.Gained</th>
+      <th>Touchdown</th>
+      <th>...</th>
+      <th>HomeTeam</th>
+      <th>AwayTeam</th>
+      <th>half</th>
+      <th>yrdregion</th>
+      <th>HomeScore</th>
+      <th>AwayScore</th>
+      <th>nextposteam</th>
+      <th>nextyrdline100</th>
+      <th>nextdown</th>
+      <th>1stdownconversion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>30.0</td>
+      <td>0</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>39</td>
+      <td>0</td>
+      <td>...</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>Beyond20</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>58.0</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>58.0</td>
+      <td>10</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>5</td>
+      <td>0</td>
+      <td>...</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>Beyond20</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>53.0</td>
+      <td>2.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2.0</td>
+      <td>53.0</td>
+      <td>5</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>-3</td>
+      <td>0</td>
+      <td>...</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>Beyond20</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>56.0</td>
+      <td>3.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>56.0</td>
+      <td>8</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>Beyond20</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>PIT</td>
+      <td>56.0</td>
+      <td>4.0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009091000</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>56.0</td>
+      <td>8</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>...</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>Beyond20</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>TEN</td>
+      <td>98.0</td>
+      <td>1.0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 25 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extract-Kickoffs-and-Possession-Starts">Extract Kickoffs and Possession Starts<a class="anchor-link" href="#Extract-Kickoffs-and-Possession-Starts">&#182;</a></h3><p>We need to extract kickoffs and possession starts in order to build a possession value calculator.  To do that, we follow this process:</p>
+<ol>
+<li><strong>Extract kickoffs by using PlayType.</strong></li>
+<li><p><strong>Extract possession starts</strong>  Drill down by GameID and Drive # (ignoring kickoffs) and take the first play of the drive.  We need to ignore kickoffs and extra points because those can both appear as the first play of a drive.  This will pollute our results if we do not ignore them.</p>
+</li>
+<li><p><strong>Find the next score in the game for each possession.</strong>  This is the hardest computation.  We do this by computing differences in the home and away scores and then fill those backward.  We treat home scores as positive and away scores as negative.  We only consider possession value within a half.  So if there is no score before halftime or the end of the game, the value is 0.</p>
+</li>
+<li><p><strong>Compute possession value.</strong>  We multiply the next score value by +1 or -1 depending on if the current possessing team is the home team or away team.  If its the home team, then multiply by +1 because the next score is already oriented to the home team.  If its the away team, then multiply by -1 because a positive next score is a negative for the away team.</p>
+</li>
+<li><strong>Restrict possessions to the first and third quarter.</strong>  We want to avoid end of half/game effects like settling for points at the end of the first half or playing to win at the end of the game.</li>
+</ol>
+<p>Some caveats:</p>
+<ul>
+<li>The dataset used is not perfect so while we expect this procedure to work a vast majority of the time, it may miss some results because of holes in the dataset.  It is unlikely this affects the analysis too much.</li>
+<li>While we restricted to first and third quarters, we did not restrict cases when there is a blowout.  Competitive games lead to more reliable results so this is probably the first issue to address going forward.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_kickoffs_and_possessions</span><span class="p">(</span><span class="n">pxp</span><span class="p">):</span>
+    <span class="c1"># Step 1: extract kickoffs</span>
+    <span class="n">ko_mask</span> <span class="o">=</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PlayType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Kickoff&#39;</span>
+    <span class="n">kickoffs</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ko_mask</span><span class="p">]</span>
+
+    <span class="c1"># Step 2: extracting possessions</span>
+    <span class="c1"># Exclude kickoffs and XPs and groupby GameID and Drive</span>
+    <span class="n">xp_mask</span> <span class="o">=</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PlayType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Extra Point&#39;</span>
+    <span class="n">game_drives</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">ko_mask</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">xp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Take first play</span>
+    <span class="n">poss_starts</span> <span class="o">=</span> <span class="n">game_drives</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Concatenate kickoffs and first plays, sort, and reindex</span>
+    <span class="n">poss</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">kickoffs</span><span class="p">,</span> <span class="n">poss_starts</span><span class="p">])</span>
+    <span class="n">poss</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">],</span>
+                     <span class="n">na_position</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">poss</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Step 3: Find the next score</span>
+    <span class="c1"># Group by game halves</span>
+    <span class="n">game_halves</span> <span class="o">=</span> <span class="n">poss</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;half&#39;</span><span class="p">])</span>
+    <span class="c1"># Compute changes in the scores.  + for Home and - for Away.</span>
+    <span class="n">score_change</span> <span class="o">=</span> <span class="n">game_halves</span><span class="p">[</span><span class="s1">&#39;AwayScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> \
+        <span class="n">game_halves</span><span class="p">[</span><span class="s1">&#39;HomeScore&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Backfill the score change so that each possession now has a value for next score in the game</span>
+    <span class="n">next_score</span> <span class="o">=</span> <span class="n">score_change</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">to_replace</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bfill&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;NextScore&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">next_score</span>
+
+    <span class="c1"># Step 4: Compute possession value</span>
+    <span class="c1"># Determine if the possessing team is home or away</span>
+    <span class="n">posteam</span> <span class="o">=</span> <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;posteam&#39;</span><span class="p">]</span>
+    <span class="n">hometeam</span> <span class="o">=</span> <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;HomeTeam&#39;</span><span class="p">]</span>
+    <span class="n">awayteam</span> <span class="o">=</span> <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;AwayTeam&#39;</span><span class="p">]</span>
+    <span class="n">posteam_is_home</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">posteam</span> <span class="o">==</span> <span class="n">hometeam</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">posteam_is_away</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">posteam</span> <span class="o">==</span> <span class="n">awayteam</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># NextScore is unchanged if posteam == hometeam and negated if posteam == awayteam</span>
+    <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;PossessionValue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">poss</span><span class="p">[</span><span class="s1">&#39;NextScore&#39;</span><span class="p">]</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="n">posteam_is_home</span> <span class="o">-</span> <span class="n">posteam_is_away</span><span class="p">)</span>
+
+    <span class="c1"># Step 5: Retrict to first and third quarters</span>
+    <span class="n">first_and_third_qtr</span> <span class="o">=</span> <span class="p">(</span><span class="n">poss</span><span class="p">[</span><span class="s1">&#39;qtr&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">poss</span><span class="p">[</span><span class="s1">&#39;qtr&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">poss</span> <span class="o">=</span> <span class="n">poss</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">first_and_third_qtr</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;HomeTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;AwayTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">,</span> <span class="s1">&#39;half&#39;</span><span class="p">,</span> <span class="s1">&#39;qtr&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>  <span class="s1">&#39;posteam&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;yrdline100&#39;</span><span class="p">,</span> <span class="s1">&#39;yrdregion&#39;</span><span class="p">,</span> <span class="s1">&#39;PlayType&#39;</span><span class="p">,</span> <span class="s1">&#39;NextScore&#39;</span><span class="p">,</span> <span class="s1">&#39;PossessionValue&#39;</span><span class="p">]</span>
+    <span class="n">poss</span> <span class="o">=</span> <span class="n">poss</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="n">poss</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">poss</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">poss</span> <span class="o">=</span> <span class="n">extract_kickoffs_and_possessions</span><span class="p">(</span><span class="n">pxp</span><span class="p">)</span>
+<span class="n">poss</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/possessions.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">poss</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GameID</th>
+      <th>HomeTeam</th>
+      <th>AwayTeam</th>
+      <th>Drive</th>
+      <th>half</th>
+      <th>qtr</th>
+      <th>down</th>
+      <th>posteam</th>
+      <th>yrdline100</th>
+      <th>yrdregion</th>
+      <th>PlayType</th>
+      <th>NextScore</th>
+      <th>PossessionValue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>PIT</td>
+      <td>30.0</td>
+      <td>Beyond20</td>
+      <td>Kickoff</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>58.0</td>
+      <td>Beyond20</td>
+      <td>Pass</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>98.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>-7.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>43.0</td>
+      <td>Beyond20</td>
+      <td>Pass</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>89.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>-7.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>5</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>73.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>74.0</td>
+      <td>Beyond20</td>
+      <td>Pass</td>
+      <td>7.0</td>
+      <td>-7.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>7</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>79.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>8</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>44.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>-7.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>14</td>
+      <td>2</td>
+      <td>3</td>
+      <td>NaN</td>
+      <td>TEN</td>
+      <td>30.0</td>
+      <td>Beyond20</td>
+      <td>Kickoff</td>
+      <td>-3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>14</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>79.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>-3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>15</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>54.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>-3.0</td>
+      <td>-3.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>16</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>95.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>-3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>17</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>54.0</td>
+      <td>Beyond20</td>
+      <td>Pass</td>
+      <td>-3.0</td>
+      <td>-3.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>18</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>TEN</td>
+      <td>90.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>-3.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>19</td>
+      <td>2</td>
+      <td>3</td>
+      <td>1.0</td>
+      <td>PIT</td>
+      <td>85.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>-3.0</td>
+      <td>-3.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2009091300</td>
+      <td>ATL</td>
+      <td>MIA</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>ATL</td>
+      <td>30.0</td>
+      <td>Beyond20</td>
+      <td>Kickoff</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2009091300</td>
+      <td>ATL</td>
+      <td>MIA</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>ATL</td>
+      <td>71.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2009091300</td>
+      <td>ATL</td>
+      <td>MIA</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>MIA</td>
+      <td>68.0</td>
+      <td>Beyond20</td>
+      <td>Run</td>
+      <td>7.0</td>
+      <td>-7.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2009091300</td>
+      <td>ATL</td>
+      <td>MIA</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1.0</td>
+      <td>ATL</td>
+      <td>37.0</td>
+      <td>Beyond20</td>
+      <td>No Play</td>
+      <td>7.0</td>
+      <td>7.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extract-Punts">Extract Punts<a class="anchor-link" href="#Extract-Punts">&#182;</a></h3><p>We need to extract net punt distance.  Extracing punts is easy.  Determining net punt distance is tricky.  A few things can happen on a punt:</p>
+<ul>
+<li>It goes off as expected</li>
+<li>Returned for a touchdown</li>
+<li>Muffed</li>
+<li>Fumbled</li>
+<li>Blocked.  </li>
+</ul>
+<p>There may be even more wrinkles.  Suffice to say, this is a bit complicated.  To simplify things, we just want to know the expected net punt distance for punts that are not returned, muffed, fumbled, blocked, or anything else.</p>
+<p>Why is it okay to simplify things?  Those complicating events do not happen often enough to materially affect the computation and just add a nuisance to the whole model.  Consider a return TD worth about 7 points.  If a return TD happens every 100 punts, then its worth about 0.01 points in expectation.  Not really a huge amount.</p>
+<p>We compute net punt distance by finding regular punts and determining the field position change.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_punts</span><span class="p">(</span><span class="n">pxp</span><span class="p">):</span>
+    <span class="c1"># Build table of punts    </span>
+    <span class="n">punt_mask</span> <span class="o">=</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PlayType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Punt&#39;</span>
+    <span class="n">punts</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">punt_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">punts</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Determine if there was a possession change, ie. the punt went off as expected.</span>
+    <span class="c1"># This excludes muffs or fumbled returns.  It also exludes return TDs and probably</span>
+    <span class="c1"># some other cases.  It is likely not too bad to do this since these events are rare.</span>
+    <span class="n">posteam</span> <span class="o">=</span> <span class="n">punts</span><span class="p">[</span><span class="s1">&#39;posteam&#39;</span><span class="p">]</span>
+    <span class="n">nextposteam</span> <span class="o">=</span> <span class="n">punts</span><span class="p">[</span><span class="s1">&#39;nextposteam&#39;</span><span class="p">]</span>
+    <span class="n">punts</span> <span class="o">=</span> <span class="n">punts</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">posteam</span> <span class="o">!=</span> <span class="n">nextposteam</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Determine the net punt distance</span>
+    <span class="n">yrdline</span> <span class="o">=</span> <span class="n">punts</span><span class="p">[</span><span class="s1">&#39;yrdline100&#39;</span><span class="p">]</span>
+    <span class="n">nextyardline</span> <span class="o">=</span> <span class="n">punts</span><span class="p">[</span><span class="s1">&#39;nextyrdline100&#39;</span><span class="p">]</span> 
+    <span class="n">net_punt_dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">yrdline</span> <span class="o">-</span> <span class="p">(</span><span class="mi">100</span> <span class="o">-</span> <span class="n">nextyardline</span><span class="p">))</span>
+
+    <span class="c1"># Add net punt length to punts table</span>
+    <span class="n">punts</span><span class="p">[</span><span class="s1">&#39;net_punt_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">net_punt_dist</span>
+
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;HomeTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;AwayTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">,</span> <span class="s1">&#39;half&#39;</span><span class="p">,</span> <span class="s1">&#39;qtr&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>  <span class="s1">&#39;posteam&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;yrdline100&#39;</span><span class="p">,</span> <span class="s1">&#39;yrdregion&#39;</span><span class="p">,</span> <span class="s1">&#39;PlayType&#39;</span><span class="p">,</span> <span class="s1">&#39;net_punt_dist&#39;</span><span class="p">]</span>
+    <span class="n">punts</span> <span class="o">=</span> <span class="n">punts</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="n">punts</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">punts</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">punts</span> <span class="o">=</span> <span class="n">extract_punts</span><span class="p">(</span><span class="n">pxp</span><span class="p">)</span>
+<span class="n">punts</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/punts.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">punts</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GameID</th>
+      <th>HomeTeam</th>
+      <th>AwayTeam</th>
+      <th>Drive</th>
+      <th>half</th>
+      <th>qtr</th>
+      <th>down</th>
+      <th>posteam</th>
+      <th>yrdline100</th>
+      <th>yrdregion</th>
+      <th>PlayType</th>
+      <th>net_punt_dist</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>56.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>54.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>TEN</td>
+      <td>96.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>39.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>41.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>30.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>5</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>79.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>53.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>8</td>
+      <td>1</td>
+      <td>2</td>
+      <td>4.0</td>
+      <td>TEN</td>
+      <td>44.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>39.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>9</td>
+      <td>1</td>
+      <td>2</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>62.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>35.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>15</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>45.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>40.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>16</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>TEN</td>
+      <td>96.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>50.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>17</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>PIT</td>
+      <td>43.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>33.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>18</td>
+      <td>2</td>
+      <td>3</td>
+      <td>4.0</td>
+      <td>TEN</td>
+      <td>71.0</td>
+      <td>Beyond20</td>
+      <td>Punt</td>
+      <td>56.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extract-Field-Goals">Extract Field Goals<a class="anchor-link" href="#Extract-Field-Goals">&#182;</a></h3><p>For field goal results, we just need FieldGoalDistance and FieldGoalResult and then to compute a 0-1 value representing the success.  This is straightforward.</p>
+<p>When it comes to making 4th down decisions, the quality of the kicker and the field/weather conditions should definitely be taken into consideration.  Remember, we are computing a baseline "average" model that can be used as a starting point.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_fgs</span><span class="p">(</span><span class="n">pxp</span><span class="p">):</span>
+    <span class="c1"># Extract field goals</span>
+    <span class="n">fg_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PlayType&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Field Goal&#39;</span><span class="p">)</span>
+    <span class="n">fg_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FieldGoalDistance&#39;</span><span class="p">,</span> <span class="s1">&#39;FieldGoalResult&#39;</span><span class="p">]</span>
+    <span class="n">fgs</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fg_mask</span><span class="p">,</span> <span class="n">fg_cols</span><span class="p">]</span>
+    <span class="c1"># restrict to fgs less than or equal to 63 yards</span>
+    <span class="n">fgs</span> <span class="o">=</span> <span class="n">fgs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">fgs</span><span class="p">[</span><span class="s1">&#39;FieldGoalDistance&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">63.</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="c1"># Compute success flag</span>
+    <span class="n">fgs</span><span class="p">[</span><span class="s1">&#39;FieldGoalSuccess&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">fgs</span><span class="p">[</span><span class="s1">&#39;FieldGoalResult&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Good&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">fgs</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fgs</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fgs</span> <span class="o">=</span> <span class="n">extract_fgs</span><span class="p">(</span><span class="n">pxp</span><span class="p">)</span>
+<span class="n">fgs</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/fgs.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fgs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[9]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>FieldGoalDistance</th>
+      <th>FieldGoalResult</th>
+      <th>FieldGoalSuccess</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>37.0</td>
+      <td>No Good</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>31.0</td>
+      <td>Blocked</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>45.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>32.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>33.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>37.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>21.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>20.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>37.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>47.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>34.0</td>
+      <td>Blocked</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>39.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>24.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>51.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>38.0</td>
+      <td>Blocked</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>22.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>46.0</td>
+      <td>No Good</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>24.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>24.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>46.0</td>
+      <td>Good</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Extract-Third-Downs">Extract Third Downs<a class="anchor-link" href="#Extract-Third-Downs">&#182;</a></h3><p>First, why third downs?  Since most teams do not go for it on fourth down, we need a proxy for the likelihood of converting the first down.  Since third downs are generally considered make-or-break, we opt to substitute performance on third downs for fourth down.</p>
+<p>In the dataset, various non-relevant plays can occur on third down.  We need to ignore these.  Also, we can likely safely assume that beyond 9 yards we do not need to consider going for it.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_third_downs</span><span class="p">(</span><span class="n">pxp</span><span class="p">):</span>
+    <span class="c1"># Ignore certain set of plays</span>
+    <span class="n">ignored_plays</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Punt&#39;</span><span class="p">,</span> <span class="s1">&#39;Field Goal&#39;</span><span class="p">,</span> <span class="s1">&#39;No Play&#39;</span><span class="p">,</span> <span class="s1">&#39;QB Kneel&#39;</span><span class="p">,</span> <span class="s1">&#39;Spike&#39;</span><span class="p">]</span>
+    <span class="n">ignored_plays_mask</span> <span class="o">=</span> <span class="n">pxp</span><span class="p">[</span><span class="s1">&#39;PlayType&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ignored_plays</span><span class="p">)</span>
+    <span class="n">valid_plays</span> <span class="o">=</span> <span class="n">pxp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="o">~</span><span class="n">ignored_plays_mask</span><span class="p">]</span>
+    <span class="c1"># third downs</span>
+    <span class="n">all_third_downs_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">valid_plays</span><span class="p">[</span><span class="s1">&#39;down&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="c1"># Restrict to less than 10 yards to go</span>
+    <span class="n">under_10_to_go</span> <span class="o">=</span> <span class="p">(</span><span class="n">valid_plays</span><span class="p">[</span><span class="s1">&#39;ydstogo&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">third_down_mask</span> <span class="o">=</span> <span class="n">all_third_downs_mask</span> <span class="o">&amp;</span> <span class="n">under_10_to_go</span>
+    <span class="c1"># Extract relevant plays</span>
+    <span class="n">third_down_plays</span> <span class="o">=</span> <span class="n">valid_plays</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">third_down_mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    
+    <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GameID&#39;</span><span class="p">,</span> <span class="s1">&#39;HomeTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;AwayTeam&#39;</span><span class="p">,</span> <span class="s1">&#39;Drive&#39;</span><span class="p">,</span> <span class="s1">&#39;half&#39;</span><span class="p">,</span> <span class="s1">&#39;qtr&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span>  <span class="s1">&#39;posteam&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;yrdline100&#39;</span><span class="p">,</span> <span class="s1">&#39;yrdregion&#39;</span><span class="p">,</span> <span class="s1">&#39;ydstogo&#39;</span><span class="p">,</span> <span class="s1">&#39;PlayType&#39;</span><span class="p">,</span> <span class="s1">&#39;1stdownconversion&#39;</span><span class="p">]</span>
+    <span class="n">third_down_plays</span> <span class="o">=</span> <span class="n">third_down_plays</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+    <span class="n">third_down_plays</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">third_down_plays</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">third_downs</span> <span class="o">=</span> <span class="n">extract_third_downs</span><span class="p">(</span><span class="n">pxp</span><span class="p">)</span>
+<span class="n">third_downs</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/third_downs.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">third_downs</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>GameID</th>
+      <th>HomeTeam</th>
+      <th>AwayTeam</th>
+      <th>Drive</th>
+      <th>half</th>
+      <th>qtr</th>
+      <th>down</th>
+      <th>posteam</th>
+      <th>yrdline100</th>
+      <th>yrdregion</th>
+      <th>ydstogo</th>
+      <th>PlayType</th>
+      <th>1stdownconversion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>56.0</td>
+      <td>Beyond20</td>
+      <td>8</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>94.0</td>
+      <td>Beyond20</td>
+      <td>6</td>
+      <td>Run</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>22.0</td>
+      <td>Beyond20</td>
+      <td>2</td>
+      <td>Sack</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>19.0</td>
+      <td>10to20</td>
+      <td>7</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>5</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>70.0</td>
+      <td>Beyond20</td>
+      <td>7</td>
+      <td>Sack</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>6</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>57.0</td>
+      <td>Beyond20</td>
+      <td>3</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>7</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>76.0</td>
+      <td>Beyond20</td>
+      <td>7</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>9</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>87.0</td>
+      <td>Beyond20</td>
+      <td>2</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>9</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>62.0</td>
+      <td>Beyond20</td>
+      <td>5</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>10</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>69.0</td>
+      <td>Beyond20</td>
+      <td>6</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>10</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>40.0</td>
+      <td>Beyond20</td>
+      <td>7</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>10</td>
+      <td>1</td>
+      <td>2</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>13.0</td>
+      <td>10to20</td>
+      <td>6</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>15</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>45.0</td>
+      <td>Beyond20</td>
+      <td>1</td>
+      <td>Run</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>16</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>94.0</td>
+      <td>Beyond20</td>
+      <td>9</td>
+      <td>Run</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>17</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>50.0</td>
+      <td>Beyond20</td>
+      <td>6</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>18</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>86.0</td>
+      <td>Beyond20</td>
+      <td>6</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>19</td>
+      <td>2</td>
+      <td>3</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>82.0</td>
+      <td>Beyond20</td>
+      <td>7</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>20</td>
+      <td>2</td>
+      <td>4</td>
+      <td>3.0</td>
+      <td>TEN</td>
+      <td>30.0</td>
+      <td>Beyond20</td>
+      <td>6</td>
+      <td>Pass</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>21</td>
+      <td>2</td>
+      <td>4</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>9.0</td>
+      <td>Inside10</td>
+      <td>1</td>
+      <td>Run</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>2009091000</td>
+      <td>PIT</td>
+      <td>TEN</td>
+      <td>25</td>
+      <td>3</td>
+      <td>5</td>
+      <td>3.0</td>
+      <td>PIT</td>
+      <td>48.0</td>
+      <td>Beyond20</td>
+      <td>1</td>
+      <td>Pass</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+        </div>
+      </div>
+    </body>
+  
+ 
+
+
+</html>
