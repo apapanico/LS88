@@ -118,7 +118,7 @@ def build_nb(notebooks, limit=None, tpl=None, extout=True, use_contentdir=True):
         nb = load_notebook(nbf)
 
         if is_notebook_cached(nbf):
-            logger.info(f"skipping (cached test) {name}")
+            logger.info(f"skipping (cached build) {name}")
             continue
 
         # Check if not intended to be executable
