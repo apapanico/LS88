@@ -1,198 +1,193 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>LS88 - Sports Analytics</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicon.ico">
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-	<link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-	<link rel="stylesheet" href="./assets/css/style.css">
-	<link rel="stylesheet" href="./assets/css/table.css">
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</head>
-
-<body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
-		<a class="navbar-brand" href="./index.html">LS88 - Sports Analytics</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="./syllabus.html">Syllabus</a>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" data-toggle="dropdown">Demos</a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Pythagorean Expectation</a>
-						<a class="dropdown-item" href="#">Offensive Metrics in Baseball</a>
-						<a class="dropdown-item" href="#">Run Expectancy</a>
-						<a class="dropdown-item" href="#">RE24</a>
-						<a class="dropdown-item" href="#">Linear Weights</a>
-						<a class="dropdown-item" href="#">PER</a>
-						<a class="dropdown-item" href="#">Expected Shot Value</a>
-						<a class="dropdown-item" href="#">Dean Oliver's Four Factor Model</a>
-						<a class="dropdown-item" href="#">The Hot Hand</a>
-					</div>
-				</li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
-					<div class="dropdown-menu">
-						<a class="dropdown-item" href="#">Data8 Review</a>
-						<a class="dropdown-item" href="#">Baseball Statistics</a>
-						<a class="dropdown-item" href="#">4th Down Bot</a>
-					</div>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="./lectures.html">Lectures</a>
-				</li>
-				<!-- <li class="nav-item">
-							<a class="nav-link" href="./project/project.pdf">Project</a>
-				</li> -->
-			</ul>
-		</div>
-	</nav>
-
-	<div id="bodyContent">
-		<table id="body-inner">
-			<tr>
-				<th>Lecture</th>
-				<th>Date</th>
-				<th>Topic</th>
-			</tr>
-			<tr>
-				<th>1</th>
-				<th>01/23/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides01_23_18.pdf">Intro Pythagorean Expectation</a> | 
-				Lecture Demo: 
+	<head>
+		<title>LS88 - Sports Analytics</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicon.ico">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+		<link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+		<link rel="stylesheet" href="./assets/css/style.css">
+		<link rel="stylesheet" href="./assets/css/table.css">
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<!--Navigation bar-->
+		<div id="nav-placeholder"></div>
+		<script>
+		$(function(){
+		$("#nav-placeholder").load("nav.html");
+		});
+		</script>
+		<!--end of Navigation bar-->
+		
+		<!-- 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand" href="./index.html">LS88 - Sports Analytics</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav mr-auto">
+								<li class="nav-item">
+										<a class="nav-link" href="./syllabus.html">Syllabus</a>
+								</li>
+								<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" data-toggle="dropdown">Demos</a>
+										<div class="dropdown-menu">
+												<a class="dropdown-item" href="#">Pythagorean Expectation</a>
+												<a class="dropdown-item" href="#">Offensive Metrics in Baseball</a>
+												<a class="dropdown-item" href="#">Run Expectancy</a>
+												<a class="dropdown-item" href="#">RE24</a>
+												<a class="dropdown-item" href="#">Linear Weights</a>
+												<a class="dropdown-item" href="#">PER</a>
+												<a class="dropdown-item" href="#">Expected Shot Value</a>
+												<a class="dropdown-item" href="#">Dean Oliver's Four Factor Model</a>
+												<a class="dropdown-item" href="#">The Hot Hand</a>
+										</div>
+								</li>
+								<li class="nav-item dropdown">
+										<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
+										<div class="dropdown-menu">
+												<a class="dropdown-item" href="#">Data8 Review</a>
+												<a class="dropdown-item" href="#">Baseball Statistics</a>
+												<a class="dropdown-item" href="#">4th Down Bot</a>
+										</div>
+								</li>
+								<li class="nav-item">
+										<a class="nav-link" href="./lectures.html">Lectures</a>
+								</li>
+								<li class="nav-item">
+												<a class="nav-link" href="./project/project.pdf">Project</a>
+								</li>
+						</ul>
+				</div>
+		</nav> -->
+		<div id="bodyContent">
+			<table id="body-inner">
+				<tr>
+					<th>Lecture</th>
+					<th>Date</th>
+					<th>Topic</th>
+				</tr>
+				<tr>
+					<th>1</th>
+					<th>01/23/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides01_23_18.pdf">Intro Pythagorean Expectation</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>2</th>
+					<th>01/30/2018</th>
+					<th>LLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides01_30_18.pdf">Offensive Performance in Baseball</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>3</th>
+					<th>02/06/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides02_06_18.pdf">Review - 02_06_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>4</th>
+					<th>02/13/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides02_13_18.pdf">Review - 02_13_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>5</th>
+					<th>02/20/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides02_20_18.pdf">02_20_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>6</th>
+					<th>03/06/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides03_06_18.pdf">03_06_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>7</th>
+					<th>03/13/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides03_13_18.pdf">03_13_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>8</th>
+					<th>03/20/2018</th>
+					<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+						Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
+						<br><br>
+						Lecture Slides: <a href="./slides/Slides03_20_18.pdf">03_20_2018</a> |
+						Lecture Demo:
+					</th>
+				</tr>
+				<tr>
+					<th>9</th>
+					<th>03/27/2018</th>
+					<th>Spring Break!</th>
 				</th>
 			</tr>
-
-			<tr>
-				<th>2</th>
-				<th>01/30/2018</th>
-				<th>LLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides01_30_18.pdf">Offensive Performance in Baseball</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>3</th>
-				<th>02/06/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides02_06_18.pdf">Review - 02_06_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>4</th>
-				<th>02/13/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides02_13_18.pdf">Review - 02_13_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>5</th>
-				<th>02/20/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides02_20_18.pdf">02_20_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>6</th>
-				<th>03/06/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides03_06_18.pdf">03_06_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>7</th>
-				<th>03/13/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides03_13_18.pdf">03_13_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>8</th>
-				<th>03/20/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
-				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
-				<br><br>
-				Lecture Slides: <a href="./slides/Slides03_20_18.pdf">03_20_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>9</th>
-				<th>03/27/2018</th>
-				<th>Spring Break!</th>
-				</th>
-			</tr>
-
 			<tr>
 				<th>10</th>
 				<th>04/03/2018</th>
-				<th>No Class</th> 
-				</th>
-			</tr>
-
-			<tr>
-				<th>11</th>
-				<th>04/10/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+				<th>No Class</th>
+			</th>
+		</tr>
+		<tr>
+			<th>11</th>
+			<th>04/10/2018</th>
+			<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
 				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
 				<br><br>
-				Lecture Slides: <a href="./slides/Slides04_10_18.pdf">04_10_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-
-			<tr>
-				<th>12</th>
-				<th>04/17/2018</th>
-				<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
+				Lecture Slides: <a href="./slides/Slides04_10_18.pdf">04_10_2018</a> |
+				Lecture Demo:
+			</th>
+		</tr>
+		<tr>
+			<th>12</th>
+			<th>04/17/2018</th>
+			<th>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed bibendum, turpis id placerat ultricies, orci diam blandit leo, ac tempus dui sapien at leo. Morbi vitae neque tincidunt mauris ornare malesuada. Phasellus faucibus sodales blandit. Nunc mollis varius accumsan. Suspendisse aliquam tellus id arcu convallis egestas. In et eros at tortor consequat elementum eget ac quam. Morbi euismod ipsum eu nulla mattis, et gravida justo dictum. Maecenas in fringilla libero, id volutpat mauris. Etiam ornare velit ac odio tincidunt, ac pulvinar risus vehicula. Praesent ac lectus mollis, sodales enim sit amet, mollis augue. Nulla id risus pellentesque, scelerisque dui eu, blandit eros. Nulla facilisi. Maecenas eget tortor gravida, vulputate turpis sit amet, placerat massa. Quisque dapibus nisl nec pellentesque congue. Sed a est malesuada, porta orci quis, dignissim massa.
 				Nunc efficitur egestas ante. Nunc porttitor ultricies consectetur. Ut in ligula lacinia, scelerisque augue vel, semper nisi. Donec feugiat sodales tellus, in pellentesque enim ultricies vitae. Sed suscipit suscipit dignissim. Nulla tempus ultricies mattis. Vestibulum sodales, tortor et accumsan condimentum, libero nibh imperdiet lorem, at interdum libero sem vitae est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent accumsan accumsan bibendum.
 				<br><br>
-				Lecture Slides: <a href="./slides/Slides04_17_18.pdf">04_18_2018</a> | 
-				Lecture Demo: 
-				</th>
-			</tr>
-		</table>
-	</div>
-		
-<br>
-<br>
-<br>
+				Lecture Slides: <a href="./slides/Slides04_17_18.pdf">04_18_2018</a> |
+				Lecture Demo:
+			</th>
+		</tr>
+	</table>
+</div>
 
+<br>
+<br>
+<br>
 </body>
 </html>
