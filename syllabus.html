@@ -19,59 +19,17 @@
 		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+		<script>
+			$(function(){
+				$("#nav-placeholder").load("navIndex.html");
+			});
+		</script>
 	</head>
 	
 	<body>
-
-		<!--Navigation bar-->
 		<div id="nav-placeholder"></div>
-		<script>
-		$(function(){
-		$("#nav-placeholder").load("nav.html");
-		});
-		</script>
-		<!--end of Navigation bar-->
-<!-- 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="./index.html">LS88 - Sports Analytics</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="./syllabus.html">Syllabus</a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-toggle="dropdown">Demos</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Pythagorean Expectation</a>
-							<a class="dropdown-item" href="#">Offensive Metrics in Baseball</a>
-							<a class="dropdown-item" href="#">Run Expectancy</a>
-							<a class="dropdown-item" href="#">RE24</a>
-							<a class="dropdown-item" href="#">Linear Weights</a>
-							<a class="dropdown-item" href="#">PER</a>
-							<a class="dropdown-item" href="#">Expected Shot Value</a>
-							<a class="dropdown-item" href="#">Dean Oliver's Four Factor Model</a>
-							<a class="dropdown-item" href="#">The Hot Hand</a>
-						</div>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Data8 Review</a>
-							<a class="dropdown-item" href="#">Baseball Statistics</a>
-							<a class="dropdown-item" href="#">4th Down Bot</a>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="./lectures.html">Lectures</a>
-					</li>
-					<li class="nav-item">
-								<a class="nav-link" href="./project/project.pdf">Project</a>
-					</li>
-				</ul>
-			</div>
-		</nav> -->
+		
 		<div id="bodyContent">
 			<div id="body-inner">
 				<a href="../policy/syllabus.pdf">Download Syllabus as pdf</a>
