@@ -7,6 +7,7 @@
   <head>
     {%- block html_head -%}
     <meta charset="utf-8" />
+
     {% set nb_title = nb.metadata.get('title', '') or resources['metadata']['name'] %}
     <title>{{nb_title}}</title>
 
@@ -17,29 +18,42 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
-    {{ navbar_head }}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/table.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    <!-- Custom stylesheet, it must be in the same directory as the html file -->
+    <!-- Stylesheet -->
     <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
-  <!-- Loading mathjax macro -->
+    <!-- Loading mathjax macro -->
     {{ mathjax() }}
-  {%- endblock html_head -%}
+    {%- endblock html_head -%}
   </head>
   {%- endblock header -%}
 
   {% block body %}
-
-    {{ navbar }}
-
     <body>
+      
+      <!--Navigation bar-->
+      <div id="nav-placeholder"></div>
+      <script>
+      $(function(){
+      $("#nav-placeholder").load("../../../nav.html");
+      });
+      </script>
+      <!--end of Navigation bar-->
+      
       <div tabindex="-1" id="notebook" class="border-box-sizing">
         <div class="container" id="notebook-container">
-    {{ super() }}
+          {{ super() }}
         </div>
       </div>
-    </body>
 
+    </body>
   {%- endblock body %}
 
 {% block footer %}

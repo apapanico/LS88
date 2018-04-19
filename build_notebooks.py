@@ -17,6 +17,8 @@ TEST_NBDIR = "Demos/pythag"
 parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
 parser.add_argument('--test', action='store_const', const=TEST_NBDIR,
                     help='Default Notebook to test')
+parser.add_argument('--force', action='store_true',
+                    help='Force notebook build')
 parser.add_argument('--extract-output', action='store_true', dest='extout',
                     help='Extract figures from notebooks')
 parser.add_argument('--do-not-use-contentdir', action='store_false',
@@ -100,7 +102,8 @@ def nb_to_html(nb, name, tpl, path, build_dir, extout=True):
     writer.write(body, resources, notebook_name=name)
 
 
-def build_nb(notebooks, limit=None, tpl=None, extout=True, use_contentdir=True):
+def build_nb(notebooks, limit=None, tpl=None, extout=True, use_contentdir=True,
+             force=False):
     tpl = tpl or DEFAULT_TPL
     logger.info(f"Using template {tpl}")
     if extout:
@@ -117,7 +120,7 @@ def build_nb(notebooks, limit=None, tpl=None, extout=True, use_contentdir=True):
         # Open into notebook node format
         nb = load_notebook(nbf)
 
-        if is_notebook_cached(nbf):
+        if not force and is_notebook_cached(nbf):
             logger.info(f"skipping (cached build) {name}")
             continue
 
@@ -135,6 +138,7 @@ def main():
     extout = args.extout
     tpl = args.tpl
     contentdir = args.no_use_contentdir
+    force = args.force
 
     if args.test is not None:
         nbdir = ROOT / Path(args.test)
@@ -153,7 +157,8 @@ def main():
                 if not nbf.match('*checkpoint*')
             ])
 
-    build_nb(notebooks, tpl=tpl, extout=extout, use_contentdir=contentdir)
+    build_nb(notebooks, tpl=tpl, extout=extout, use_contentdir=contentdir,
+             force=force)
 
     with open(NB_BUILD_CACHE, 'w') as fp:
         logger.info("storing hash cache")
