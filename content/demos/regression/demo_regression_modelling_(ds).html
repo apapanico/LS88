@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head><meta charset="utf-8" />
+
     
     <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="/LS88/assets/css/style.css">
+    <link rel="stylesheet" href="/LS88/assets/css/table.css">
+    <link rel="stylesheet" href="/LS88/assets/css/notebook.css">
 
-    <!-- Custom stylesheet, it must be in the same directory as the html file -->
-    <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
-  <!-- Loading mathjax macro -->
+    <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
@@ -32,13 +39,20 @@
     });
     </script>
     <!-- End of mathjax configuration --></head>
-
-    
-
     <body>
+      
+      <!--Navigation bar-->
+      <div id="nav-placeholder"></div>
+      <script>
+      $(function(){
+      $("#nav-placeholder").load("/LS88/nav.html");
+      });
+      </script>
+      <!--end of Navigation bar-->
+      
       <div tabindex="-1" id="notebook" class="border-box-sizing">
         <div class="container" id="notebook-container">
-    
+          
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -231,15 +245,15 @@ $$</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;BB&#39;: 0.28638321301612535,
- &#39;CS&#39;: -0.38989776186550018,
- &#39;HBP&#39;: 0.33304169100271125,
- &#39;HR&#39;: 1.4338161249074206,
- &#39;O&#39;: -0.27201355484038592,
- &#39;SB&#39;: 0.18417972795862464,
- &#39;X1B&#39;: 0.47544693639011038,
- &#39;X2B&#39;: 0.74304556503735342,
- &#39;X3B&#39;: 1.0736700743249663}</pre>
+<pre>{&#39;BB&#39;: 0.2863832130161269,
+ &#39;CS&#39;: -0.38989776186549979,
+ &#39;HBP&#39;: 0.33304169100271136,
+ &#39;HR&#39;: 1.4338161249074213,
+ &#39;O&#39;: -0.27201355484038614,
+ &#39;SB&#39;: 0.18417972795862644,
+ &#39;X1B&#39;: 0.47544693639011082,
+ &#39;X2B&#39;: 0.74304556503735286,
+ &#39;X3B&#39;: 1.0736700743249648}</pre>
 </div>
 
 </div>
@@ -281,7 +295,7 @@ $$</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0.67917270538677599</pre>
+<pre>0.67917270538677366</pre>
 </div>
 
 </div>
@@ -388,16 +402,16 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;BB&#39;: 0.28662643975428004,
- &#39;CS&#39;: -0.40902665944231764,
- &#39;HBP&#39;: 0.33341587621274849,
+<pre>{&#39;BB&#39;: 0.28662643975427982,
+ &#39;CS&#39;: -0.40902665944231775,
+ &#39;HBP&#39;: 0.33341587621274871,
  &#39;HR&#39;: 1.4365313988000492,
- &#39;O_nonK&#39;: -0.26123185080084904,
- &#39;SB&#39;: 0.18928883043990488,
- &#39;SO&#39;: -0.28016407211535621,
- &#39;X1B&#39;: 0.4541786515758871,
- &#39;X2B&#39;: 0.73163384286994293,
- &#39;X3B&#39;: 1.0905362177967373}</pre>
+ &#39;O_nonK&#39;: -0.26123185080084932,
+ &#39;SB&#39;: 0.18928883043990441,
+ &#39;SO&#39;: -0.2801640721153561,
+ &#39;X1B&#39;: 0.45417865157588766,
+ &#39;X2B&#39;: 0.73163384286994426,
+ &#39;X3B&#39;: 1.0905362177967333}</pre>
 </div>
 
 </div>
@@ -442,15 +456,15 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;BB&#39;: 0.18655221577597175,
- &#39;CS&#39;: -0.0053071858808931838,
- &#39;HBP&#39;: 0.5359688017299602,
- &#39;HR&#39;: 1.3140872972712314,
- &#39;O&#39;: -0.25989264826683828,
- &#39;SB&#39;: 0.13498240576980003,
- &#39;X1B&#39;: 0.38322356997502116,
+<pre>{&#39;BB&#39;: 0.18655221577597089,
+ &#39;CS&#39;: -0.0053071858808917405,
+ &#39;HBP&#39;: 0.53596880172995953,
+ &#39;HR&#39;: 1.314087297271231,
+ &#39;O&#39;: -0.25989264826683789,
+ &#39;SB&#39;: 0.13498240576979953,
+ &#39;X1B&#39;: 0.38322356997502066,
  &#39;X2B&#39;: 1.1326424996671209,
- &#39;X3B&#39;: 0.83704803308974252}</pre>
+ &#39;X3B&#39;: 0.83704803308973941}</pre>
 </div>
 
 </div>
@@ -511,7 +525,7 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;Intercept&#39;: 227.41671011042573, &#39;SO&#39;: -0.20186847358573684}</pre>
+<pre>{&#39;Intercept&#39;: 227.41671011042573, &#39;SO&#39;: -0.20186847358573679}</pre>
 </div>
 
 </div>
@@ -675,11 +689,11 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;Ftr&#39;: 0.034652607257466356,
- &#39;Intercept&#39;: 0.50005666845551255,
- &#39;Reb&#39;: 0.03949670885959667,
- &#39;Tov&#39;: -0.058226279568261041,
- &#39;eFG&#39;: 0.12265332691838071}</pre>
+<pre>{&#39;Ftr&#39;: 0.034652607257466307,
+ &#39;Intercept&#39;: 0.50005666845551222,
+ &#39;Reb&#39;: 0.039496708859596663,
+ &#39;Tov&#39;: -0.058226279568260958,
+ &#39;eFG&#39;: 0.1226533269183807}</pre>
 </div>
 
 </div>
@@ -803,11 +817,11 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;Ftr&#39;: 0.01043219525932601,
- &#39;Intercept&#39;: 4.1416575123900934e-05,
- &#39;Reb&#39;: 0.012797456466873643,
- &#39;Tov&#39;: -0.0181837554559185,
- &#39;eFG&#39;: 0.037733556027590855}</pre>
+<pre>{&#39;Ftr&#39;: 0.010432195259326007,
+ &#39;Intercept&#39;: 4.1416575123893562e-05,
+ &#39;Reb&#39;: 0.012797456466873648,
+ &#39;Tov&#39;: -0.018183755455918493,
+ &#39;eFG&#39;: 0.037733556027590848}</pre>
 </div>
 
 </div>
@@ -886,7 +900,7 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(0.019097591027970269, 0.01043219525932601)</pre>
+<pre>(0.019097591027970269, 0.010432195259326007)</pre>
 </div>
 
 </div>
@@ -1001,10 +1015,10 @@ what we computed using play-by-play data.</p>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{&#39;Ftr&#39;: 0.024295414915050523,
- &#39;Reb&#39;: 0.051561693830323815,
- &#39;Tov&#39;: -0.059406457503157477,
- &#39;eFG&#39;: 0.13357198257802977}</pre>
+<pre>{&#39;Ftr&#39;: 0.024295414915050561,
+ &#39;Reb&#39;: 0.051561693830323829,
+ &#39;Tov&#39;: -0.059406457503157518,
+ &#39;eFG&#39;: 0.1335719825780298}</pre>
 </div>
 
 </div>
@@ -2539,6 +2553,7 @@ Bottom 20 by RAPM
 </div>
         </div>
       </div>
+
     </body>
   
  

@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head><meta charset="utf-8" />
+
     
     <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="/LS88/assets/css/style.css">
+    <link rel="stylesheet" href="/LS88/assets/css/table.css">
+    <link rel="stylesheet" href="/LS88/assets/css/notebook.css">
 
-    <!-- Custom stylesheet, it must be in the same directory as the html file -->
-    <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
-  <!-- Loading mathjax macro -->
+    <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
@@ -32,13 +39,20 @@
     });
     </script>
     <!-- End of mathjax configuration --></head>
-
-    
-
     <body>
+      
+      <!--Navigation bar-->
+      <div id="nav-placeholder"></div>
+      <script>
+      $(function(){
+      $("#nav-placeholder").load("/LS88/nav.html");
+      });
+      </script>
+      <!--end of Navigation bar-->
+      
       <div tabindex="-1" id="notebook" class="border-box-sizing">
         <div class="container" id="notebook-container">
-    
+          
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -366,7 +380,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0.67917270538677599</pre>
+<pre>0.67917270538677366</pre>
 </div>
 
 </div>
@@ -962,7 +976,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(0.040228876586653438, 0.037733425455504011)</pre>
+<pre>(0.040228876586653438, 0.037733425455504031)</pre>
 </div>
 
 </div>
@@ -1609,7 +1623,7 @@ dtype: float64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x10c136be0&gt;</pre>
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x10f236390&gt;</pre>
 </div>
 
 </div>
@@ -1937,7 +1951,7 @@ Kris Humphries      -4.261560
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(-3.6586029004963838, -5.756523187909683, 1.997198456536166)</pre>
+<pre>(-3.6586029004972258, -5.7565231879105081, 1.9971984565353249)</pre>
 </div>
 
 </div>
@@ -1970,7 +1984,7 @@ Kris Humphries      -4.261560
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(2.576941391569771, 1.2791000225734099, 6.1802253956219477)</pre>
+<pre>(2.5769413915697719, 1.2791000225734137, 6.1802253956219424)</pre>
 </div>
 
 </div>
@@ -2613,6 +2627,7 @@ dtype: float64</pre>
 </div>
         </div>
       </div>
+
     </body>
   
  

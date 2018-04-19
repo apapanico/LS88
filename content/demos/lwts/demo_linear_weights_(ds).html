@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
   <head><meta charset="utf-8" />
+
     
     <title></title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link  rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+    <link rel="stylesheet" href="/LS88/assets/css/style.css">
+    <link rel="stylesheet" href="/LS88/assets/css/table.css">
+    <link rel="stylesheet" href="/LS88/assets/css/notebook.css">
 
-    <!-- Custom stylesheet, it must be in the same directory as the html file -->
-    <link rel="stylesheet" href="../../../assets/css/notebook.css">
 
-  <!-- Loading mathjax macro -->
+    <!-- Loading mathjax macro -->
     <!-- Load mathjax -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
     <!-- MathJax configuration -->
@@ -32,13 +39,20 @@
     });
     </script>
     <!-- End of mathjax configuration --></head>
-
-    
-
     <body>
+      
+      <!--Navigation bar-->
+      <div id="nav-placeholder"></div>
+      <script>
+      $(function(){
+      $("#nav-placeholder").load("/LS88/nav.html");
+      });
+      </script>
+      <!--end of Navigation bar-->
+      
       <div tabindex="-1" id="notebook" class="border-box-sizing">
         <div class="container" id="notebook-container">
-    
+          
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -72,7 +86,17 @@
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Adding datascience helper tools to path...
 Setting up Matplotlib...
-Matplotlib imported as mpl
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+<div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Matplotlib imported as mpl
 Matplotlib.pyplot imported as plt
 </pre>
 </div>
@@ -456,12 +480,12 @@ Matplotlib.pyplot imported as plt
 <table border="1" class="dataframe">
     <thead>
         <tr>
-            <th>HR</th> <th>3B</th> <th>HBP</th> <th>1B</th> <th>IBB</th> <th>Generic out</th> <th>2B</th> <th>BB</th>
+            <th>IBB</th> <th>2B</th> <th>HBP</th> <th>Generic out</th> <th>HR</th> <th>1B</th> <th>BB</th> <th>3B</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>100.97</td> <td>2.17036</td> <td>3.02815</td> <td>22.6595</td> <td>5.58592</td> <td>-91.9568   </td> <td>24.9763</td> <td>54.1536</td>
+            <td>5.58592</td> <td>24.9763</td> <td>3.02815</td> <td>-91.9568   </td> <td>100.97</td> <td>22.6595</td> <td>54.1536</td> <td>2.17036</td>
         </tr>
     </tbody>
 </table>
@@ -541,12 +565,12 @@ Matplotlib.pyplot imported as plt
 <table border="1" class="dataframe">
     <thead>
         <tr>
-            <th>HR</th> <th>3B</th> <th>HBP</th> <th>1B</th> <th>2B</th> <th>BB</th>
+            <th>2B</th> <th>HBP</th> <th>HR</th> <th>1B</th> <th>BB</th> <th>3B</th>
         </tr>
     </thead>
     <tbody>
         <tr>
-            <td>144.142</td> <td>3.24469</td> <td>6.63626</td> <td>43.4272</td> <td>40.3913</td> <td>124.13</td>
+            <td>40.3913</td> <td>6.63626</td> <td>144.142</td> <td>43.4272</td> <td>124.13</td> <td>3.24469</td>
         </tr>
     </tbody>
 </table>
@@ -560,6 +584,7 @@ Matplotlib.pyplot imported as plt
 </div>
         </div>
       </div>
+
     </body>
   
  
