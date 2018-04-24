@@ -2,19 +2,27 @@ html {
   font-weight: 300;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 20px;
+}
+
 body {
-  	padding-top: 50px;
 	height: auto;
 	margin: 0;
 	overflow-x: hidden;
-	/*background-color: #f3f3f3;*/
+/*	background-color: #f3f3f3;*/
 }
 
 #bodyContent {
+    padding-top: 20px;
 	display: flex;
 	align-items:center;
     flex-direction: column;
-    width: 50%;
+    width: 75%;
     min-width: 320px;
     position: relative;
     margin: 2em auto;
@@ -27,16 +35,6 @@ body {
     margin-left: auto;
     overflow: hidden;
 }
-
-
-h1, h2, h3, h4, h5, h6 {
-  font-weight: 500;
-}
-
-h3 {
-  font-size: 20px;
-}
-
 
 nav {
 	width: 100%;
