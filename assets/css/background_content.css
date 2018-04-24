@@ -1,0 +1,5 @@
+body {
+	background: url("../images/background_content.jpg") no-repeat center center fixed;
+	background-size: cover;
+	overflow: hidden;
+}
