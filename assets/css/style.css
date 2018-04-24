@@ -49,3 +49,25 @@ nav {
 a {
 	cursor: pointer;
 }
+
+/* Calendar */
+
+.calendar table, .calendar th, .calendar tr, .calendar td {
+  border: 1px solid black;
+}
+
+.calendar th, .calendar tr, .calendar td {
+  padding: 12px;
+}
+
+.calendar td.header {
+  font-weight: 500;
+}
+
+.calendar tr.monday {
+  background-color: #e6e8f2;
+}
+
+.calendar tr.wednesday {
+  background-color: #f2f4f8;
+}
