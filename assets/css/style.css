@@ -64,10 +64,10 @@ a {
   font-weight: 500;
 }
 
-.calendar tr.monday {
+.calendar tr.evenrow {
   background-color: #e6e8f2;
 }
 
-.calendar tr.wednesday {
+.calendar tr.oddrow {
   background-color: #f2f4f8;
 }
