@@ -1,0 +1,17 @@
+---
+path: ''
+home: '/LS88'
+navbar: html/nav_content.html
+template: base.tpl
+---
+filename: index.html
+title: LS88 - Sports Analytics
+body_content: html/index_content.html
+---
+filename: demos.html
+title: LS88 - Sports Analytics - Demos
+body_content: html/demos_content.html
+---
+filename: syllabus.html
+title: LS88 - Sports Analytics - Syllabus
+body_content: html/syllabus_content.html

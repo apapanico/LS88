@@ -1,146 +1,139 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>LS88 - Sports Analytics</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicon.ico">
-		
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-		<link rel="stylesheet" href="./assets/css/style.css">
-		
-		<script src="https://code.jquery.com/jquery-3.2.1.min.js">
-		</script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js">
-		</script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js">
-		</script>
-		<!-- 		<script>
-		$(function(){
-		$("#nav-placeholder").load("nav.html");
-		});
-		</script> -->
-	</head>
-	<body id="index" class="home">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="./">LS88 - Sports Analytics</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarSupportedContent">
-				<ul class="navbar-nav mr-auto">
-					<li class="nav-item">
-						<a class="nav-link" href="./syllabus.html">Syllabus</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="./demos.html">Demos</a>
-					</li>
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="#">Data8 Review</a>
-							<a class="dropdown-item" href="#">Baseball Statistics</a>
-							<a class="dropdown-item" href="#">4th Down Bot</a>
-						</div>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="./lectures.html">Lectures</a>
-					</li>
-				</ul>
-			</div>
-		</nav>
-		<!-- 		<div id="nav-placeholder"></div> -->
-		
-		<!-- 		<div id="bodyContent">
-			<div id="body-inner">
-						<iframe src="https://calendar.google.com/calendar/embed?src=berkeley.edu_hkqfm9sq1f3aj8f31855nc4ucc%40group.calendar.google.com&ctz=America%2FLos_Angeles" style="border: 0" width="800" height="600" frameborder="0" scrolling="no">
-						</iframe>
-			</div>
-		</div> -->
-		<div id="bodyContent">
-			<div class="container">
-				<section id="content">
-					<h2>Announcements</h2>
-					<div id="announcements">
-					</div>
-					<h2>Calendar</h2>
-					
-					<div class="cell border-box-sizing text_cell rendered">
-						<div class="prompt input_prompt">
-						</div>
-						<div class="inner_cell">
-							<div class="text_cell_render border-box-sizing rendered_html">
-								<p>
-								<strong>Instructor</strong>: </p>
-								<p>
-								<strong>Lecture</strong>: </p>
-							</div>
-						</div>
-					</div>
-					<div class="cell border-box-sizing code_cell rendered">
-					</div>
-					<div class="cell border-box-sizing code_cell rendered">
-						<div class="output_wrapper">
-							<div class="output">
-								<div class="output_area">
-									<div class="output_html rendered_html output_subarea output_execute_result">
-										<div class="calendar">
-											<table>
-												<tr>
-													<td class="header">Date</td>
-													<td class="header">Topic</td>
-													<td class="header">Lecture</td>
-													<td class="header">Reading</td>
-													<td class="header">Assignment</td>
-												</tr>
-												<tr class="evenrow">
-													<td>
-														Wed 1/17
-													</td>
-													<td>
-														Introduction
-													</td>
-													<td>
-														<a href="#">Demos</a>, <a href="#">Slides</a>
-													</td>
-													<td>
-														<a href="#">1.1</a>, <a href="#">1.2</a>, <a href="#">1.3</a>
-													</td>
-													<td>
-														<div>
-															<a href="#">Lab 01: Expressions</a>
-														</div>
-													</td>
-												</tr>
-												<tr class="oddrow">
-													<td>
-														Fri 1/19
-													</td>
-													<td>
-														Second Lecture
-													</td>
-													<td>
-														<a href="#">Slides</a>, <a href="#">Video</a>
-													</td>
-													<td>
-														<a href="#">Chapter 2</a>
-													</td>
-													<td>
-														<div>
-															<a href="#">Homework 01</a>
-															(Due Thu 1/25)
-														</div>
-													</td>
-												</tr>
-											</table>
-										</div>
+  <head><meta charset="utf-8" />
+
+  	
+    <title>LS88 - Sports Analytics</title>
+
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<link rel="shortcut icon" type="image/x-icon" href="/LS88/assets/img/favicon.ico">
+  	
+  	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+      <!-- Stylesheets -->
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+  	<link rel="stylesheet" href="/LS88/assets/css/style.css"></head>
+    <body>
+      
+      <!--Navigation bar-->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<a class="navbar-brand" href="/LS88/index.html">LS88 - Sports Analytics</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="/LS88/syllabus.html">Syllabus</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/LS88/demos.html">Demos</a>
+			</li>
+			<!-- <li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
+				<div class="dropdown-menu">
+					<a class="dropdown-item" href="#">Data8 Review</a>
+					<a class="dropdown-item" href="#">Baseball Statistics</a>
+					<a class="dropdown-item" href="#">4th Down Bot</a>
+				</div>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/LS88/lectures.html">Lectures</a>
+			</li> -->
+		</ul>
+	</div>
+</nav>
+      <!--end of Navigation bar-->
+      
+      <div id="bodyContent">
+        <div class="container">
+          <section id="content">
+            <h2>Announcements</h2>
+<div id="announcements">
+</div>
+<h2>Calendar</h2>
+
+<div class="cell border-box-sizing text_cell rendered">
+	<div class="prompt input_prompt">
+	</div>
+	<div class="inner_cell">
+		<div class="text_cell_render border-box-sizing rendered_html">
+			<p>
+			<strong>Instructor</strong>: </p>
+			<p>
+			<strong>Lecture</strong>: </p>
+		</div>
+	</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+	<div class="output_wrapper">
+		<div class="output">
+			<div class="output_area">
+				<div class="output_html rendered_html output_subarea output_execute_result">
+					<div class="calendar">
+						<table>
+							<tr>
+								<td class="header">Date</td>
+								<td class="header">Topic</td>
+								<td class="header">Lecture</td>
+								<td class="header">Reading</td>
+								<td class="header">Assignment</td>
+							</tr>
+							<tr class="evenrow">
+								<td>
+									Wed 1/17
+								</td>
+								<td>
+									Introduction
+								</td>
+								<td>
+									<a href="#">Demos</a>, <a href="#">Slides</a>
+								</td>
+								<td>
+									<a href="#">1.1</a>, <a href="#">1.2</a>, <a href="#">1.3</a>
+								</td>
+								<td>
+									<div>
+										<a href="#">Lab 01: Expressions</a>
 									</div>
-								</div>
-							</div>
-						</div>
+								</td>
+							</tr>
+							<tr class="oddrow">
+								<td>
+									Fri 1/19
+								</td>
+								<td>
+									Second Lecture
+								</td>
+								<td>
+									<a href="#">Slides</a>, <a href="#">Video</a>
+								</td>
+								<td>
+									<a href="#">Chapter 2</a>
+								</td>
+								<td>
+									<div>
+										<a href="#">Homework 01</a>
+										(Due Thu 1/25)
+									</div>
+								</td>
+							</tr>
+						</table>
 					</div>
-				</section>
+				</div>
 			</div>
 		</div>
-	</body>
+	</div>
+</div>
+          </section>
+        </div>
+      </div>
+
+    </body>
+
 </html>
