@@ -89,7 +89,7 @@ def nb_to_html(nb, name, tpl, path, build_dir, context, extout=True):
         'build_directory': build_dir.lower()
     }
     resources['context'] = context
-    logger.info(f"Resources: {resources}")
+    logger.debug(f"Resources: {resources}")
 
     if nb.cells[0]['metadata'].get('toc', False):
         nb.cells.pop(0)
