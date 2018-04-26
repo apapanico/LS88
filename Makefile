@@ -40,4 +40,7 @@ html_local:
 html_test:
 	$(PY) $(BASEDIR)/build_html.py --test 
 
+html_local_test:
+	$(PY) $(BASEDIR)/build_html.py --test --home .
+
 .PHONY: html

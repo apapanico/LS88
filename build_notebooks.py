@@ -123,7 +123,8 @@ def build_nb(notebooks, context={}, limit=None, tpl=None, extout=True,
 
         nbf_path = nbf.resolve().parent
         if use_htmldir:
-            build_path = HTML_DIR / nbf.parent.relative_to(CONTENT_DIR)
+            build_path = HTML_DIR / \
+                nbf.parent.resolve().relative_to(CONTENT_DIR)
         else:
             build_path = nbf_path
 

@@ -23,9 +23,11 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.0/dist/bootstrap-toc.min.js"></script>
+    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.0/dist/bootstrap-toc.min.css">  
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
     <link rel="stylesheet" href="{{ home }}/assets/css/style.css">
     <link rel="stylesheet" href="{{ home }}/assets/css/table.css">
@@ -49,9 +51,20 @@
       {{ navbar }}
       <!--end of Navigation bar-->
       
-      <div tabindex="-1" id="notebook" class="border-box-sizing">
-        <div class="container" id="notebook-container">
-          {{ super() }}
+      <div id="bodyContent">
+        <div class="container" id="main-container">
+          <div class="row">
+            <div class="col-2">
+                <nav id="toc" data-toggle="toc" class="sticky-top"></nav>
+            </div>
+            <div class="col-10">
+              <div tabindex="-1" id="notebook" class="border-box-sizing">
+                <div class="container" id="notebook-container" data-spy="scroll" data-target="#toc">
+                  {{ super() }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
