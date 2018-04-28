@@ -102,6 +102,7 @@
 	<script>
 	alert("hello")
 	$('#ds-notebook-container').load('ds.html');
+	alert(document.getElementByID('ds-notebook-container').innerHTML)
 	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook-container')});
 	// $('#pd-notebook-container').load('pd.html');
 	$('body').scrollspy({target: ''});
