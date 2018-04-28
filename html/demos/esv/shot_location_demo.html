@@ -106,8 +106,9 @@
     <footer>
 
 	<script>
-	alert("hello");
+	// alert("hello");
 	$("#ds-notebook-container").load("ds.html");
+	$("#ds-notebook-container").load("pd.html");
 	</script>
 
 	<script type="text/javascript">
@@ -115,6 +116,8 @@
 	alert(document.getElementById("ds-notebook-container").innerHTML);
 	Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
 	alert(document.getElementById("ds-toc").innerHTML);
+	Toc.init({$nav: $("#pd-toc"), $scope: $("#pd-notebook-container")});
+	alert(document.getElementById("pd-toc").innerHTML);
 	// $("#pd-notebook-container").load("pd.html");
 	// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 	$('body').scrollspy({target: ''});
