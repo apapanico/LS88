@@ -113,11 +113,14 @@
 
 	<script type="text/javascript">
 	$(function() {
-	alert(document.getElementById("ds-notebook-container").innerHTML);
+	var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
+	// alert(loadedhtml);
 	Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
-	alert(document.getElementById("ds-toc").innerHTML);
+	loadedhtml = document.getElementById("ds-toc").innerHTML;
+	// alert(loadedhtml);
 	Toc.init({$nav: $("#pd-toc"), $scope: $("#pd-notebook-container")});
-	alert(document.getElementById("pd-toc").innerHTML);
+	loadedhtml = document.getElementById("pd-toc").innerHTML;
+	// alert(loadedhtml);
 	// $("#pd-notebook-container").load("pd.html");
 	// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 	$('body').scrollspy({target: ''});
