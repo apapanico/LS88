@@ -4,7 +4,6 @@
 	
 	
 	<title></title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
@@ -108,16 +107,18 @@
 
 	<script>
 	$('#ds-notebook-container').load('ds.html');
-	$('#pd-notebook-container').load('pd.html');
+	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook-container')});
+	// $('#pd-notebook-container').load('pd.html');
+	$('body').scrollspy({target: ''});
 	</script>
 
-	<script type="text/javascript">
+<!-- 	<script type="text/javascript">
 	$(function() {
-	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook')});
-	Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook')});
+	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook-container')});
+	Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 	$('body').scrollspy({target: ''});
 	});
-	</script>
+	</script> -->
 
     </footer>
 
