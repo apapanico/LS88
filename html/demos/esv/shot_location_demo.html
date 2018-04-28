@@ -99,29 +99,27 @@
 			</div>
 		</div>
 
-	<script>
-	alert("hello")
-	$('#ds-notebook-container').load('ds.html');
-	alert(document.getElementByID('ds-notebook-container').innerHTML)
-	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook-container')});
-	alert(document.getElementByID('ds-toc').innerHTML)
-	// $('#pd-notebook-container').load('pd.html');
-	$('body').scrollspy({target: ''});
-	</script>
+
 
 	</body>
 
     <footer>
 
+	<script>
+	alert("hello");
+	$("#ds-notebook-container").load("ds.html");
+	</script>
 
-
-<!-- 	<script type="text/javascript">
+	<script type="text/javascript">
 	$(function() {
-	Toc.init({$nav: $('#ds-toc'), $scope: $('#ds-notebook-container')});
-	Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
+	alert(document.getElementById("ds-notebook-container").innerHTML);
+	Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
+	alert(document.getElementById("ds-toc").innerHTML);
+	// $("#pd-notebook-container").load("pd.html");
+	// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 	$('body').scrollspy({target: ''});
 	});
-	</script> -->
+	</script>
 
     </footer>
 
