@@ -111,19 +111,22 @@
 		$("#pd-notebook-container").load("pd.html");
 	});
 	</script>
+
 	<script type="text/javascript">
-	alert("hello")
-	var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
-	alert(loadedhtml);
-	Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
-	loadedhtml = document.getElementById("ds-toc").innerHTML;
-	alert(loadedhtml);
-	Toc.init({$nav: $("#pd-toc"), $scope: $("#pd-notebook-container")});
-	loadedhtml = document.getElementById("pd-toc").innerHTML;
-	alert(loadedhtml);
-	// $("#pd-notebook-container").load("pd.html");
-	// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
-	$('body').scrollspy({target: ''});
+	$(function() {
+		alert("hello")
+		var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
+		// alert(loadedhtml);
+		Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
+		loadedhtml = document.getElementById("ds-toc").innerHTML;
+		// alert(loadedhtml);
+		Toc.init({$nav: $("#pd-toc"), $scope: $("#pd-notebook-container")});
+		loadedhtml = document.getElementById("pd-toc").innerHTML;
+		// alert(loadedhtml);
+		// $("#pd-notebook-container").load("pd.html");
+		// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
+		$('body').scrollspy({target: ''});
+	});
 	</script>
 
     </footer>
