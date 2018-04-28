@@ -105,15 +105,12 @@
 
     <footer>
 
-	<script>
+	<script type="text/javascript">
 	$(function() {
 		$("#ds-notebook-container").load("ds.html");
 		$("#pd-notebook-container").load("pd.html");
 	});
-	</script>
-
-	<script type="text/javascript">
-	$(function() {
+	function build_toc() {
 		// alert("hello")
 		var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
 		// alert(loadedhtml);
@@ -126,7 +123,8 @@
 		// $("#pd-notebook-container").load("pd.html");
 		// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 		$('body').scrollspy({target: ''});
-	});
+	}
+	build_toc();
 	</script>
 
     </footer>
