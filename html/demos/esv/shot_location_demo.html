@@ -107,12 +107,17 @@
 
 	<script>
 	$(function() {
-		$("#ds-notebook-container").load("ds.html");
-		$("#pd-notebook-container").load("pd.html");
+		$("#ds-notebook-container").load("ds.html", function () {
+			Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
+			$('body').scrollspy({target: ''});
+		});
+		$("#pd-notebook-container").load("pd.html", function () {
+			Toc.init({$nav: $("#pd-toc"), $scope: $("#pd-notebook-container")});
+		});
 	});
 	</script>
 
-	<script type="text/javascript">
+<!-- 	<script type="text/javascript">
 	$(function() {
 		alert("hello")
 		var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
@@ -127,7 +132,7 @@
 		// Toc.init({$nav: $('#pd-toc'), $scope: $('#pd-notebook-container')});
 		$('body').scrollspy({target: ''});
 	});
-	</script>
+	</script> -->
 
     </footer>
 
