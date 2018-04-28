@@ -106,14 +106,15 @@
     <footer>
 
 	<script>
-	// alert("hello");
-	$("#ds-notebook-container").load("ds.html");
-	$("#pd-notebook-container").load("pd.html");
+	$(function() {
+		$("#ds-notebook-container").load("ds.html");
+		$("#pd-notebook-container").load("pd.html");
+	});
 	</script>
 
 	<script type="text/javascript">
 	$(function() {
-		alert("hello")
+		// alert("hello")
 		var loadedhtml = document.getElementById("ds-notebook-container").innerHTML;
 		// alert(loadedhtml);
 		Toc.init({$nav: $("#ds-toc"), $scope: $("#ds-notebook-container")});
