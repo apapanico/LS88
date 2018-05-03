@@ -2,6 +2,7 @@
 archive/
 data/
 docs/
+assets/js/config.js
 
 .nb_test_cache
 .nb_build_cache

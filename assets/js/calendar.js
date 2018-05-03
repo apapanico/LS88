@@ -3,8 +3,6 @@
  * FullCalendar with Google Calendars integration.
  **/
 
-// var apiKey = 'AIzaSyAbN4DIP_IV6h1QbPYl1soK0-kuy45pjYw';
-
 // Change event url to null.
 var transform = function(event) {
     event.url = null;
@@ -38,20 +36,14 @@ $(document).ready(function() {
         minTime: "09:00:00",
         maxTime: "19:00:00",
         defaultDate: calendarStartDate()
-        // googleCalendarApiKey: apiKey,
-        // eventSources: [
-        //     {
-        //         googleCalendarId: sectionsCalendarId,
-        //         cache: true,
-        //         color: '#0072c1'
-        //     },
-        //     {
-        //         googleCalendarId: lecturesCalendarId,
-        //         cache: true,
-        //         color: '#c1d6e3',
-        //         textColor: '#000'
-        //     },
-        // ]
+        googleCalendarApiKey: apiKey,
+        eventSources: [
+            {
+                googleCalendarId: ls88CalendarId,
+                cache: true,
+                color: '#0072c1'
+            }
+        ]
     });
 
 });
