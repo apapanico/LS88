@@ -16,7 +16,7 @@ var render = function(event, element, view) {
     } else {
       var content = "";
     }
-    content = content + 'Start: ' + event.starts_at + '<br />End: ' + event.ends_at;
+    content = content + 'Start: ' + event.start + '<br />End: ' + event.end;
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
       content = content + '<br />' + event.location; // "<p>" + event.location + "</p>";
