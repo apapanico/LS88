@@ -36,14 +36,14 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        eventRender: function(event, element) {
-            $(element).tooltip({title: event.title});             
-        },
+        // eventRender: function(event, element) {
+        //     $(element).tooltip({title: event.title});             
+        // },
         eventSources: [
           {
             googleCalendarId: ls88CalendarId,
             cache: true,
-            color: 'C5CAE8' //'#B3E1F7'
+            color: '#C5CAE8' //'#B3E1F7'
           },
           {
             googleCalendarId: berkeleyCalendarId,
@@ -61,10 +61,10 @@ $(document).ready(function() {
           //   color: '#009688'
           // }
         ],
-          // eventRender: function(event, element) {
-          //   element.qtip({
-          //     content: event.description
-          //   });
-          // }
+          eventRender: function(event, element) {
+            element.qtip({
+              content: event.description
+            });
+          }
     });
 });
