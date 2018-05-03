@@ -28,7 +28,7 @@ $(document).ready(function() {
         eventDataTransform: transform,
         eventRender: render,
         defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
-        allDaySlot: false,
+        allDaySlot: true,
         slotEventOverlap: false,
         weekends: true,
         height: "auto",
