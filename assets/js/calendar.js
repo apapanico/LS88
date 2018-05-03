@@ -36,6 +36,9 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
+        eventRender: function(event, element) {
+            $(element).tooltip({title: event.title});             
+        },
         eventSources: [
           {
             googleCalendarId: ls88CalendarId,
@@ -57,6 +60,11 @@ $(document).ready(function() {
           //   cache: true,
           //   color: '#009688'
           // }
-        ]
+        ],
+          // eventRender: function(event, element) {
+          //   element.qtip({
+          //     content: event.description
+          //   });
+          // }
     });
 });
