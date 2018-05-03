@@ -20,8 +20,8 @@ HTML_DIR = ROOT / 'html'
 NB_DIRS = ['Demos', 'HW']
 DEFAULT_TPL = 'templates/notebook.tpl'
 
-HOME_LOCAL = str(ROOT.resolve())
-HOME_REMOTE = '/LS88'
+# HOME_LOCAL = str(ROOT.resolve())
+# HOME_REMOTE = '/LS88'
 NAVBAR_DEFAULT = 'html/nav_content.html'
 TEST_NB = "content/Demos/esv/Shot Location Demo (DS).ipynb"
 NB_BUILD_CACHE = ROOT / '.nb_build_cache'
@@ -46,9 +46,9 @@ parser.add_argument('--do-not-use-htmldir', action='store_false',
                     help='Use html/ to store html notebooks')
 parser.add_argument('--template', dest='tpl',
                     help='Notebook Jinja template')
-parser.add_argument('--local-home', action='store_const', const=HOME_LOCAL,
-                    default=HOME_REMOTE, help='Home directory')
-parser.add_argument('--navbar', default=NAVBAR_DEFAULT, help='Home directory')
+# parser.add_argument('--local-home', action='store_const', const=HOME_LOCAL,
+#                     default=HOME_REMOTE, help='Home directory')
+parser.add_argument('--navbar', default=NAVBAR_DEFAULT, help='Navbar')
 
 
 def md5_for_file(f, block_size=2**20):
@@ -152,11 +152,8 @@ def main():
     htmldir = args.no_use_htmldir
     force = args.force
 
-    navbar_tpl = Template(open(args.navbar, 'r').read())
-    navbar_str = navbar_tpl.render(home=args.local_home)
     context = {
-        'home': args.local_home,
-        'navbar': navbar_str
+        'navbar': open(args.navbar, 'r').read()
     }
 
     if args.test is not None:

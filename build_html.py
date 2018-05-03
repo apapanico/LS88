@@ -11,7 +11,7 @@ CONTEXT_FILE = 'build.yml'
 
 parser = argparse.ArgumentParser(description='Build Jupyter Notebooks to HTML.')
 parser.add_argument('--test', action='store_true', help='Test')
-parser.add_argument('--home', help='Home directory')
+# parser.add_argument('--home', help='Home directory')
 
 
 def load_contexts(context_file=CONTEXT_FILE):
@@ -32,7 +32,7 @@ def main():
 
     for context in contexts:
         context.update(base_context)
-        context['home'] = args.home or context['home']
+        # context['home'] = args.home or context['home']
         if args.test:
             context['filename'] = context['filename'].replace(
                 '.html', '_test.html')

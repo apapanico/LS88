@@ -10,7 +10,7 @@
     <meta charset="utf-8" />
 
     {% set nb_title = nb.metadata.get('title', '') or resources['metadata']['name'] %}
-    {% set home = resources.get('context', {}).get('home', '.') %}
+    {# {% set home = resources.get('context', {}).get('home', '.') %} #}
 
     <title>{{ nb_title }}</title>
 
