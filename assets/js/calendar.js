@@ -19,7 +19,7 @@ var render = function(event, element, view) {
     if (event.allDay) {
       content = content + 'All Day';
     } else {
-      content = content + 'Start: ' + event.start.format("h:mm") + '<br />End: ' + event.end.format("h:mm");
+      content = content + event.start.format("h:mm") + ' - ' + event.end.format("h:mm");
     }
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
