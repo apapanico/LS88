@@ -73,8 +73,8 @@ function calendarStartDate() {
 $(document).ready(function() {
 
     $('#weekly').fullCalendar({
-      defaultView: 'month',
-      defaultDate: '2018-04-12',
+      defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
+      defaultDate: calendarStartDate(),
 
       eventRender: function(eventObj, $el) {
         $el.popover({
