@@ -35,15 +35,13 @@ $(document).ready(function() {
         height: "auto",
         minTime: "09:00:00",
         maxTime: "19:00:00",
-        defaultDate: calendarStartDate()
+        defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        eventSources: [
-            {
-                googleCalendarId: ls88CalendarId,
-                cache: true,
-                color: '#0072c1'
-            }
-        ]
+        events: {
+            googleCalendarId: ls88CalendarId,
+            cache: true,
+            color: '#0072c1'
+        }
     });
 
 });
