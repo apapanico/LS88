@@ -24,7 +24,6 @@ function calendarStartDate() {
 }
 
 $(document).ready(function() {
-
     $('#weekly').fullCalendar({
         eventDataTransform: transform,
         eventRender: render,
@@ -43,5 +42,4 @@ $(document).ready(function() {
             color: '#0072c1'
         }
     });
-
 });
