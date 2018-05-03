@@ -18,9 +18,9 @@ var render = function(event, element, view) {
     }
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
-      if (event.description !== undefined){
-        content = content + "<br />";
-      }
+      // if (event.description !== undefined){
+      //   content = content + "<br />";
+      // }
       content = content + "<p>" + event.location + "</p>";
     }
     $(element).popover({
