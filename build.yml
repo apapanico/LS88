@@ -15,3 +15,7 @@ body_content: html/demos_content.html
 filename: syllabus.html
 title: LS88 - Sports Analytics - Syllabus
 body_content: html/syllabus_content.html
+---
+filename: calendar.html
+title: LS88 - Sports Analytics - Calendar
+body_content: html/calendar_content.html

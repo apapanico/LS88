@@ -1,4 +1,4 @@
-html {
+/*html {
   font-weight: 300;
 }
 
@@ -14,12 +14,94 @@ body {
 	height: auto;
 	margin: 0;
 	overflow-x: hidden;
-/*	background-color: #f3f3f3;*/
+}*/
+
+@charset "UTF-8";
+body {
+  font-family: "Work Sans", sans-serif;
+/*  font-size: 1.5em;
+*/}
+
+code, kbd, pre, samp {
+  font-family: "Inconsolata", monospace;
+  font-size: 100%;
+}
+
+h1, h2, h3, h4, .navbar {
+  font-family: "Roboto", sans-serif;
+  /*margin-top: 1em;*/
+  font-weight: 500;
+}
+
+/* Necessary to have fixed nav bar and TOC interaction */
+h1:before, h2:before, h3:before, h4:before {
+  content: " ";
+  display: block;
+  height: 60px;
+  margin-top: -60px;
+  visibility: hidden;
+}
+
+.navbar {
+  margin-top: 0;
+}
+
+h1 {
+  font-weight: lighter;
+  color: #0072c1;
+  /*padding-top: 1.2em;*/
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid #eee;
+}
+
+h2, .navbar {
+  font-weight: 400;
+}
+
+section, footer {
+  margin: 2em 0;
+}
+
+header {
+  padding-bottom: 0.5em;
+  margin: 3.75em 0 1em;
+}
+
+header h1 {
+  color: #0072c1;
+}
+
+footer {
+  margin-bottom: 6em;
+}
+
+li p {
+  margin: 0 0;
+}
+
+a, button, .btn {
+  outline: 0;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+blockquote {
+  background-color: #e6f3ff;
+  border-left: solid #0072c1;
+  font-size: inherit;
+}
+
+abbr {
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
 }
 
 #bodyContent {
-    padding-top: 20px;
-  	display: flex;
+    /*padding-top: 20px;*/
+  	/*display: flex;*/
   	align-items:center;
     flex-direction: column;
     width: 85%;
@@ -29,13 +111,6 @@ body {
     z-index: 1;
     /*overflow: auto;*/
 }
-
-#body-inner {
-    margin-right: auto;
-    margin-left: auto;
-    overflow: hidden;
-}
-
 nav {
 	/*width: 100%;*/
 	/*position: fixed;*/
@@ -113,4 +188,84 @@ a {
 
 .calendar tr.oddrow {
   background-color: #f2f4f8;
+}
+
+/* Navbar colors */
+.navbar {
+  background-color: #0072c1;
+  border: none;
+  top: 0;
+  /*position: fixed;*/
+  right: 0;
+  left: 0;
+}
+
+.navbar .navbar-brand {
+  color: #ecf0f1;
+}
+
+.navbar .navbar-brand:hover, .navbar .navbar-brand:focus {
+  color: #ffffff;
+}
+
+.navbar .navbar-text {
+  color: #ecf0f1;
+}
+
+.navbar .navbar-nav > li > a {
+  color: #ecf0f1;
+}
+
+.navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:focus {
+  color: #ffffff;
+}
+
+.navbar .navbar-nav > .active > a, .navbar .navbar-nav > .active > a:hover, .navbar .navbar-nav > .active > a:focus {
+  color: #ffffff;
+  background-color: #0085e1;
+}
+
+.navbar .navbar-nav > .open > a, .navbar .navbar-nav > .open > a:hover, .navbar .navbar-nav > .open > a:focus {
+  color: #ffffff;
+  background-color: #0085e1;
+}
+
+.navbar .navbar-toggle {
+  border: none;
+}
+
+.navbar .navbar-toggle:hover, .navbar .navbar-toggle:focus {
+  background-color: #0085e1;
+}
+
+.navbar .navbar-toggle .icon-bar {
+  background-color: #ecf0f1;
+}
+
+.navbar .navbar-collapse,
+.navbar .navbar-form {
+  border: none;
+}
+
+.navbar .navbar-link {
+  color: #ecf0f1;
+}
+
+.navbar .navbar-link:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 767px) {
+  .navbar .navbar-nav .open .dropdown-menu > li > a {
+    color: #ecf0f1;
+  }
+
+  .navbar .navbar-nav .open .dropdown-menu > li > a:hover, .navbar .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #ffffff;
+  }
+
+  .navbar .navbar-nav .open .dropdown-menu > .active > a, .navbar .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar .navbar-nav .open .dropdown-menu > .active > a:focus {
+    color: #ffffff;
+    background-color: #0085e1;
+  }
 }

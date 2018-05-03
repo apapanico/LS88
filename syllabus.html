@@ -6,44 +6,60 @@
     <title>LS88 - Sports Analytics - Syllabus</title>
 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  	<link rel="shortcut icon" type="image/x-icon" href="/LS88/assets/img/favicon.ico">
+  	<link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicon.ico">
   	
-  	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.0/dist/bootstrap-toc.min.js"></script>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/gcal.js"></script>
+
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/calendar.js"></script>
 
       <!-- Stylesheets -->
-  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.0/dist/bootstrap-toc.min.css">  
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
-  	<link rel="stylesheet" href="/LS88/assets/css/style.css"></head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css' />
+
+  	<link rel="stylesheet" href="./assets/css/style.css"></head>
     <body>
       
       <!--Navigation bar-->
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-	<a class="navbar-brand" href="/LS88/index.html">LS88 - Sports Analytics</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item">
-				<a class="nav-link" href="/LS88/syllabus.html">Syllabus</a>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/LS88/demos.html">Demos</a>
-			</li>
-			<!-- <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
-				<div class="dropdown-menu">
-					<a class="dropdown-item" href="#">Data8 Review</a>
-					<a class="dropdown-item" href="#">Baseball Statistics</a>
-					<a class="dropdown-item" href="#">4th Down Bot</a>
-				</div>
-			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="/LS88/lectures.html">Lectures</a>
-			</li> -->
-		</ul>
+      <nav class="navbar navbar-expand-lg">
+	<div class="container">
+		<a class="navbar-brand" href="./index.html">LS88 - Sports Analytics</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="./syllabus.html">Syllabus</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="./calendar.html">Calendar</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="./demos.html">Demos</a>
+				</li>
+				<!-- <li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown">HW</a>
+						<div class="dropdown-menu">
+								<a class="dropdown-item" href="#">Data8 Review</a>
+								<a class="dropdown-item" href="#">Baseball Statistics</a>
+								<a class="dropdown-item" href="#">4th Down Bot</a>
+						</div>
+				</li>
+				<li class="nav-item">
+						<a class="nav-link" href="./lectures.html">Lectures</a>
+				</li> -->
+			</ul>
+		</div>
 	</div>
 </nav>
       <!--end of Navigation bar-->
@@ -51,22 +67,27 @@
       <div id="bodyContent">
         <div class="container">
           <section id="content">
-            <a href="/LS88/policy/syllabus.pdf">Download Syllabus as pdf</a>
+            <main id="content" class="container">
+<div class="row">
+<div class="col-2">
+    <nav id="toc" class="sticky-top"></nav>
+</div>
+<div class="col-10">
+  <div id="syllabus-content">
 <header>
-	<h1 class="title">LS 88-2: Data Science Connector Sports Analytics</h1>
-	<p class="author">Instructor: Alex Papanicolaou</p>
-	<p class="semester">Term: Spring 2018</p>
+	<h1 class="title">Course Information</h1>
 </header>
-<p>E-mail: first initial + last name + "+ls88" + "@" + "berkeley.edu"<br />
-	Web: <a href="https://piazza.com/berkeley/spring2018/ls882/home"><strong>piazza.com/berkeley/spring2018/ls882/home</strong></a><br />
+<p>Download: <a href="./policy/syllabus.pdf"><strong>syllabus.pdf</strong></a><br />
+	E-mail: first initial + last name + "+ls88" + "@" + "berkeley.edu"<br />
+	Web: <a href="https://piazza.com/berkeley/spring2018.2/home"><strong>piazza.com/berkeley/spring2018.2/home</strong></a><br />
 	Class Room: Cory 105<br />
 	Class Hours: T 12-1:59pm<br />
 	Office Hours: TBD<br />
 	<br />
 </p>
-<h1 id="course-description" class="unnumbered unnumbered">Course Description</h1>
+<h2 id="course-description" class="unnumbered unnumbered">Course Description</h2>
 <p>The principles of data science meet sports analytics. What makes a good hitter in baseball? How do you measure that? What are the flaws of plus/minus in basketball? Do Steph Curry or Klay Thompson ever get a hot hand? When should a coach go for it on 4th down? This course cover a wide range of topics on the analytical thinking behind the data revolution in sports and explore data science through the lens of sports analytics.</p>
-<h1 id="materials" class="unnumbered unnumbered">Materials</h1>
+<h2 id="materials" class="unnumbered unnumbered">Materials</h2>
 <p>There are no required materials but here are some interesting resources (among many)</p>
 <ul>
 	<li><p><em>The Book: Playing The Percentages In Baseball</em> by Tom Tango, Mitchel Lichtman, and Andrew Dolphin</p></li>
@@ -74,21 +95,21 @@
 	<li><p><em>Mathletics</em> by Wayne L. Winston</p></li>
 	<li><p><em>Basketball on Paper</em> Dean Oliver</p></li>
 </ul>
-<h1 id="prerequisites" class="unnumbered unnumbered">Prerequisites</h1>
+<h2 id="prerequisites" class="unnumbered unnumbered">Prerequisites</h2>
 <p>This connector course moves quite quickly trying to immerse students in hands-on labs. It is highly recommended this connector be taken after Data 8 because many of the topics will assume a grounding in Python and the knowledge of the topics in Data 8.</p>
-<h1 id="course-objectives" class="unnumbered unnumbered">Course Objectives</h1>
+<h2 id="course-objectives" class="unnumbered unnumbered">Course Objectives</h2>
 <p>This course will demystify the analytical thinking behind the data revolution in sports and learn data science through a wide range of topics. We will discuss the theory, development, and application of data science analytics in sports. Students will learn about measuring performance, inference, regression modeling, and the idiosyncracies and subtleties of data as well as common pitfalls. At the end of the course, students will have deeper appreciation of how the methods of data science applied to sports have broader applicability and will be well on their to way to engaging with data in their own projects, education, or career.</p>
-<h1 id="course-structure" class="unnumbered unnumbered">Course Structure</h1>
-<h2 id="class-structure" class="unnumbered unnumbered">Class Structure</h2>
+<h2 id="course-structure" class="unnumbered unnumbered">Course Structure</h2>
+<h3 id="class-structure" class="unnumbered unnumbered">Class Structure</h3>
 <p>The course will consist of 1 lecture per week that will also feature a lab component with hands-on work. The labs will tie-in with the lectures.</p>
-<h2 id="homework" class="unnumbered unnumbered">Homework</h2>
+<h3 id="homework" class="unnumbered unnumbered">Homework</h3>
 <p>There will be (near weekly) homeworks that will build on the lectures and the labs. The homeworks will consist of Jupyter Notebooks and will be submitted through a private Dropbox File Request.</p>
-<h2 id="participation" class="unnumbered unnumbered">Participation</h2>
+<h3 id="participation" class="unnumbered unnumbered">Participation</h3>
 <p>Attend the lab-lectures and participate.</p>
-<h2 id="website" class="unnumbered unnumbered">Website</h2>
+<h3 id="website" class="unnumbered unnumbered">Website</h3>
 <p>Piazza will be used for disseminating labs and homeworks as well as hosting any discussions. It would also be nice to see a vibrant discussion of related topics that are not exactly within the class but relevant and interesting. The system is highly catered to getting you help fast and efficiently from classmates or the teaching staff. Rather than emailing questions, I encourage you to post your questions on Piazza. If you have any problems or feedback for the developers, email team@piazza.com.</p>
 <p>Find the link to the class page above.</p>
-<h3 id="class-project" class="unnumbered unnumbered">Class Project</h3>
+<h4 id="class-project" class="unnumbered unnumbered">Class Project</h4>
 <p>There will be a group project for the class.</p>
 <ul>
 	<li><p>Groups of size 3-4 are preferred but can allow smaller. No larger.</p></li>
@@ -101,7 +122,7 @@
 	</ol></li>
 	<li><p>Final product: a 3-5 page report, accompanying code or notebooks, and a short presentation for the class. Presentations will be in the last week.</p></li>
 </ul>
-<h2 id="grading-policy" class="unnumbered unnumbered">Grading Policy</h2>
+<h3 id="grading-policy" class="unnumbered unnumbered">Grading Policy</h3>
 <p>Attendance will be graded as checkmark for whether you are present or not.</p>
 <p>Homeworks will be graded as check, check plus, or check minus.</p>
 <ul>
@@ -109,15 +130,33 @@
 	<li><p>40%: Homework</p></li>
 	<li><p>60%: Course Project</p></li>
 </ul>
-<h1 id="course-policies" class="unnumbered unnumbered">Course Policies</h1>
-<h2 id="during-class" class="unnumbered unnumbered">During Class</h2>
+<h2 id="course-policies" class="unnumbered unnumbered">Course Policies</h2>
+<h3 id="during-class" class="unnumbered unnumbered">During Class</h3>
 <p>Please attend lecture and participate. Phones are prohibited as they are rarely useful for anything in the course. Please refrain from eating in class. Beverages are okay. Food and beverage policy is superseded by that of the lecture room.</p>
-<h2 id="attendance-policy" class="unnumbered unnumbered">Attendance Policy</h2>
+<h3 id="attendance-policy" class="unnumbered unnumbered">Attendance Policy</h3>
 <p>Attendance is expected in all lab-lectures. Valid excuses for absence will be accepted before class. In extenuating circumstances, valid excuses with proof will be accepted after class. For every class missed the participation grade will be dropped 1 percentage point.</p>
-<h2 id="policies-on-incomplete-grades-and-late-assignments" class="unnumbered unnumbered">Policies on Incomplete Grades and Late Assignments</h2>
+<h3 id="policies-on-incomplete-grades-and-late-assignments" class="unnumbered unnumbered">Policies on Incomplete Grades and Late Assignments</h3>
 <p>Standard Berkeley policy will be followed regarding incomplete grades. Late assignments will be accepted for no penalty if a valid excuse is communicated to the instructor before the deadline. After the deadline, assignments will be accepted for a 50% deduction to the score up to 2 days after the deadline. After this any assignments handed in will be given 0.</p>
-<h2 id="academic-integrity-and-honesty" class="unnumbered unnumbered">Academic Integrity and Honesty</h2>
+<h3 id="academic-integrity-and-honesty" class="unnumbered unnumbered">Academic Integrity and Honesty</h3>
 <p>Students are required to comply with the standard UC Berkeley policy on academic integrity. This shouldn’t be an issue but this is here on the rare chance something happens.</p>
+
+  </div>
+</div>
+</div>
+</main>
+
+<script>
+$(function() {
+	var navSelector = '#toc';
+	var $myNav = $(navSelector);
+	var scopeSelector = '#syllabus-content';
+	var $myScope = $(scopeSelector);
+	Toc.init({$nav: $myNav, $scope: $myScope});
+	$('body').scrollspy({
+		target: navSelector
+	});
+});
+</script>
           </section>
         </div>
       </div>
