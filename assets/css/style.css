@@ -168,27 +168,28 @@ a {
 	cursor: pointer;
 }
 
-/* Calendar */
+/* Outline */
 
-.calendar table, .calendar th, .calendar tr, .calendar td {
+.outline table, .outline th, .outline tr, .outline td {
   border: 1px solid black;
 }
 
-.calendar th, .calendar tr, .calendar td {
+.outline th, .outline tr, .outline td {
   padding: 12px;
 }
 
-.calendar td.header {
+.outline td.header {
   font-weight: 500;
 }
 
-.calendar tr.evenrow {
-  background-color: #e6e8f2;
-}
-
-.calendar tr.oddrow {
+.outline tr.evenrow {
   background-color: #f2f4f8;
 }
+
+.outline tr.oddrow {
+  background-color: #ffffff;
+}
+
 
 /* Navbar colors */
 .navbar {
