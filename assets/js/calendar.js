@@ -36,9 +36,6 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        // eventRender: function(event, element) {
-        //     $(element).tooltip({title: event.title});             
-        // },
         eventRender: function(eventObj, $el) {
           $el.popover({
             title: eventObj.title,
@@ -72,3 +69,6 @@ $(document).ready(function() {
         ]
     });
 });
+        // eventRender: function(event, element) {
+        //     $(element).tooltip({title: event.title});             
+        // },
