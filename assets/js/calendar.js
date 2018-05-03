@@ -73,6 +73,7 @@ function calendarStartDate() {
 $(document).ready(function() {
 
     $('#weekly').fullCalendar({
+      eventDataTransform: transform,
       defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
       defaultDate: calendarStartDate(),
 
