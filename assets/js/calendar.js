@@ -78,13 +78,10 @@ $(document).ready(function() {
       defaultDate: calendarStartDate(),
 
       eventRender: function(eventObj, el) {
-        if (eventObj.description === undefined) {
-            eventObj.description = "";
-        } 
         $(el).popover({
           trigger: 'hover',
           title: eventObj.title,
-          content: eventObj.description,
+          content: eventObj.description || "",
           placement: 'top',
           container: 'body'
         });
