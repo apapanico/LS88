@@ -76,11 +76,11 @@ $(document).ready(function() {
       defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
       defaultDate: calendarStartDate(),
 
-      eventRender: function(eventObj, $el) {
-        $el.popover({
-          title: eventObj.title,
-          content: eventObj.description,
+      eventRender: function(eventObj, el) {
+        $(el).popover({
           trigger: 'hover',
+          // title: eventObj.title,
+          // content: eventObj.description,
           placement: 'top',
           container: 'body'
         });
