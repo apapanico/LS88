@@ -10,7 +10,7 @@
     <title>{{ title }}</title>
 
   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-  	<link rel="shortcut icon" type="image/x-icon" href="{{ home }}/assets/img/favicon.ico">
+  	<link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicon.ico">
   	
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -21,8 +21,8 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/gcal.js"></script>
 
-    <script src="{{ home }}/assets/js/config.js"></script>
-    <script src="{{ home }}/assets/js/calendar.js"></script>
+    <script src="./assets/js/config.js"></script>
+    <script src="./assets/js/calendar.js"></script>
 
       <!-- Stylesheets -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -30,7 +30,7 @@
   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css' />
 
-  	<link rel="stylesheet" href="{{ home }}/assets/css/style.css">
+  	<link rel="stylesheet" href="./assets/css/style.css">
 
     {%- endblock html_head -%}
   </head>
