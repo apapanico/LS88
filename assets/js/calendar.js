@@ -36,10 +36,27 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        events: {
+        eventSources: [
+          {
             googleCalendarId: ls88CalendarId,
             cache: true,
             color: '#0072c1'
-        }
+          },
+          {
+            googleCalendarId: berkeleyCalendarId,
+            cache: true,
+            color: '#0072c1'
+          },
+          {
+            googleCalendarId: holidayCalendarId,
+            cache: true,
+            color: '#0072c1'
+          },
+          {
+            googleCalendarId: holiday2CalendarId,
+            cache: true,
+            color: '#0072c1'
+          }
+        ]
     });
 });
