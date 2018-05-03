@@ -40,23 +40,23 @@ $(document).ready(function() {
           {
             googleCalendarId: ls88CalendarId,
             cache: true,
-            color: '#0072c1'
+            color: '#B3E1F7'
           },
           {
             googleCalendarId: berkeleyCalendarId,
             cache: true,
-            color: '#D81B60'
+            color: '#F3BACF'
           },
           {
             googleCalendarId: holidayCalendarId,
             cache: true,
-            color: '#0B8043'
+            color: '#B5D8C6'
           },
-          {
-            googleCalendarId: holiday2CalendarId,
-            cache: true,
-            color: '#009688'
-          }
+          // {
+          //   googleCalendarId: holiday2CalendarId,
+          //   cache: true,
+          //   color: '#009688'
+          // }
         ]
     });
 });
