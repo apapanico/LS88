@@ -11,7 +11,18 @@ var transform = function(event) {
 
 // Add location to event display.
 var render = function(event, element, view) {
-    element.append($('<div class="fc-location">').html(event.location));
+    var content = event.description || ""
+    if (event.location !== undefined){
+      element.append($('<div class="fc-location">').html(event.location));
+      content = content + "\n" + event.location;
+    }
+    $(el).popover({
+      trigger: 'hover',
+      title: event.title,
+      content: content,
+      placement: 'top',
+      container: 'body'
+    });
     return element;
 }
 
@@ -23,92 +34,41 @@ function calendarStartDate() {
     return startDate;
 }
 
-// $(document).ready(function() {
-//     $('#weekly').fullCalendar({
-//         eventDataTransform: transform,
-//         eventRender: render,
-//         defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
-//         allDaySlot: true,
-//         slotEventOverlap: false,
-//         weekends: false,
-//         height: "auto",
-//         minTime: "09:00:00",
-//         maxTime: "19:00:00",
-//         defaultDate: calendarStartDate(),
-//         googleCalendarApiKey: apiKey,
-//         eventRender: function(event, element) {
-//           $(element).popover({
-//             title: event.title,
-//             content: event.description,
-//             trigger: 'hover',
-//             placement: 'top',
-//             container: 'body'
-//           });
-//         },
-//         eventSources: [
-//           {
-//             googleCalendarId: ls88CalendarId,
-//             cache: true,
-//             color: '#C5CAE8' //'#B3E1F7'
-//           },
-//           {
-//             googleCalendarId: berkeleyCalendarId,
-//             cache: true,
-//             color: '#F3BACF'
-//           },
-//           {
-//             googleCalendarId: holidayCalendarId,
-//             cache: true,
-//             color: '#B5D8C6'
-//           },
-//           // {
-//           //   googleCalendarId: holiday2CalendarId,
-//           //   cache: true,
-//           //   color: '#009688'
-//           // }
-//         ]
-//     });
-// });
-
 $(document).ready(function() {
-
     $('#weekly').fullCalendar({
-      eventDataTransform: transform,
-      defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
-      defaultDate: calendarStartDate(),
-
-      eventRender: function(eventObj, el) {
-        $(el).popover({
-          trigger: 'hover',
-          title: eventObj.title,
-          content: eventObj.description || "",
-          placement: 'top',
-          container: 'body'
-        });
-      },
-      googleCalendarApiKey: apiKey,
-      eventSources: [
-        {
-          googleCalendarId: ls88CalendarId,
-          cache: true,
-          color: '#C5CAE8' //'#B3E1F7'
-        },
-        {
-          googleCalendarId: berkeleyCalendarId,
-          cache: true,
-          color: '#F3BACF'
-        },
-        {
-          googleCalendarId: holidayCalendarId,
-          cache: true,
-          color: '#B5D8C6'
-        },
-        // {
-        //   googleCalendarId: holiday2CalendarId,
-        //   cache: true,
-        //   color: '#009688'
-        // }
-      ]
+        eventDataTransform: transform,
+        eventRender: render,
+        defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
+        allDaySlot: true,
+        slotEventOverlap: false,
+        weekends: false,
+        height: "auto",
+        minTime: "09:00:00",
+        maxTime: "19:00:00",
+        defaultDate: calendarStartDate(),
+        googleCalendarApiKey: apiKey,
+        eventSources: [
+          {
+            googleCalendarId: ls88CalendarId,
+            cache: true,
+            color: '#C5CAE8' //'#B3E1F7'
+          },
+          {
+            googleCalendarId: berkeleyCalendarId,
+            cache: true,
+            color: '#F3BACF'
+          },
+          {
+            googleCalendarId: holidayCalendarId,
+            cache: true,
+            color: '#B5D8C6'
+          },
+          // {
+          //   googleCalendarId: holiday2CalendarId,
+          //   cache: true,
+          //   color: '#009688'
+          // }
+        ]
     });
 });
 
