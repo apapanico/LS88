@@ -16,7 +16,7 @@ var render = function(event, element, view) {
       element.append($('<div class="fc-location">').html(event.location));
       content = content + "\n" + event.location;
     }
-    $(el).popover({
+    $(element).popover({
       trigger: 'hover',
       title: event.title,
       content: content,
