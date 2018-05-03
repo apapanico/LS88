@@ -26,7 +26,7 @@ var render = function(event, element, view) {
       content = content + '<br />' + event.location; // "<p>" + event.location + "</p>";
     }
     $(element).popover({
-      html: true,
+      // html: true,
       trigger: 'hover',
       title: event.title,
       content: content,
