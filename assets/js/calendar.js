@@ -82,7 +82,7 @@ $(document).ready(function() {
         $(el).popover({
           trigger: 'hover',
           title: eventObj.title,
-          content: eventObj.description,
+          // content: eventObj.description,
           placement: 'top',
           container: 'body'
         });
