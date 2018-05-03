@@ -36,15 +36,15 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        eventRender: function(eventObj, $el) {
-          $el.popover({
-            title: eventObj.title,
-            content: eventObj.description,
-            trigger: 'hover',
-            placement: 'top',
-            container: 'body'
-          });
-        },
+        // eventRender: function(eventObj, $el) {
+        //   $el.popover({
+        //     title: eventObj.title,
+        //     content: eventObj.description,
+        //     trigger: 'hover',
+        //     placement: 'top',
+        //     container: 'body'
+        //   });
+        // },
         eventSources: [
           {
             googleCalendarId: ls88CalendarId,
