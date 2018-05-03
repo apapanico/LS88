@@ -11,10 +11,17 @@ var transform = function(event) {
 
 // Add location to event display.
 var render = function(event, element, view) {
-    var content = event.description || ""
+    if (event.description !== undefined){
+      var content = "<p>" + event.description + "</p>";
+    } else {
+      var content = "";
+    }
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
-      content = content + "\n" + event.location;
+      if (event.description !== undefined){
+        content = content + "<br />";
+      }
+      content = content + "<p>" + event.location + "</p>";
     }
     $(element).popover({
       trigger: 'hover',
