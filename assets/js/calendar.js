@@ -23,52 +23,96 @@ function calendarStartDate() {
     return startDate;
 }
 
+// $(document).ready(function() {
+//     $('#weekly').fullCalendar({
+//         eventDataTransform: transform,
+//         eventRender: render,
+//         defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
+//         allDaySlot: true,
+//         slotEventOverlap: false,
+//         weekends: false,
+//         height: "auto",
+//         minTime: "09:00:00",
+//         maxTime: "19:00:00",
+//         defaultDate: calendarStartDate(),
+//         googleCalendarApiKey: apiKey,
+//         eventRender: function(event, element) {
+//           $(element).popover({
+//             title: event.title,
+//             content: event.description,
+//             trigger: 'hover',
+//             placement: 'top',
+//             container: 'body'
+//           });
+//         },
+//         eventSources: [
+//           {
+//             googleCalendarId: ls88CalendarId,
+//             cache: true,
+//             color: '#C5CAE8' //'#B3E1F7'
+//           },
+//           {
+//             googleCalendarId: berkeleyCalendarId,
+//             cache: true,
+//             color: '#F3BACF'
+//           },
+//           {
+//             googleCalendarId: holidayCalendarId,
+//             cache: true,
+//             color: '#B5D8C6'
+//           },
+//           // {
+//           //   googleCalendarId: holiday2CalendarId,
+//           //   cache: true,
+//           //   color: '#009688'
+//           // }
+//         ]
+//     });
+// });
+
 $(document).ready(function() {
+
     $('#weekly').fullCalendar({
-        eventDataTransform: transform,
-        eventRender: render,
-        defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
-        allDaySlot: true,
-        slotEventOverlap: false,
-        weekends: false,
-        height: "auto",
-        minTime: "09:00:00",
-        maxTime: "19:00:00",
-        defaultDate: calendarStartDate(),
-        googleCalendarApiKey: apiKey,
-        eventRender: function(event, element) {
-          $(element).popover({
-            title: event.title,
-            content: event.description,
-            trigger: 'hover',
-            placement: 'top',
-            container: 'body'
-          });
+      defaultView: 'month',
+      defaultDate: '2018-04-12',
+
+      eventRender: function(eventObj, $el) {
+        $el.popover({
+          title: eventObj.title,
+          content: eventObj.description,
+          trigger: 'hover',
+          placement: 'top',
+          container: 'body'
+        });
+      },
+      googleCalendarApiKey: apiKey,
+      eventSources: [
+        {
+          googleCalendarId: ls88CalendarId,
+          cache: true,
+          color: '#C5CAE8' //'#B3E1F7'
         },
-        eventSources: [
-          {
-            googleCalendarId: ls88CalendarId,
-            cache: true,
-            color: '#C5CAE8' //'#B3E1F7'
-          },
-          {
-            googleCalendarId: berkeleyCalendarId,
-            cache: true,
-            color: '#F3BACF'
-          },
-          {
-            googleCalendarId: holidayCalendarId,
-            cache: true,
-            color: '#B5D8C6'
-          },
-          // {
-          //   googleCalendarId: holiday2CalendarId,
-          //   cache: true,
-          //   color: '#009688'
-          // }
-        ]
+        {
+          googleCalendarId: berkeleyCalendarId,
+          cache: true,
+          color: '#F3BACF'
+        },
+        {
+          googleCalendarId: holidayCalendarId,
+          cache: true,
+          color: '#B5D8C6'
+        },
+        // {
+        //   googleCalendarId: holiday2CalendarId,
+        //   cache: true,
+        //   color: '#009688'
+        // }
+      ]
     });
 });
+
+
+
         // eventRender: function(event, element) {
         //     $(element).tooltip({title: event.title});             
         // },
