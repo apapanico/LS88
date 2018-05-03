@@ -40,7 +40,7 @@ $(document).ready(function() {
           {
             googleCalendarId: ls88CalendarId,
             cache: true,
-            color: '#B3E1F7'
+            color: 'C5CAE8' //'#B3E1F7'
           },
           {
             googleCalendarId: berkeleyCalendarId,
