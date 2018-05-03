@@ -16,7 +16,11 @@ var render = function(event, element, view) {
     } else {
       var content = "";
     }
-    content = content + 'Start: ' + event.start + '<br />End: ' + event.end;
+    if (event.allDay) {
+      content = content + 'All Day';
+    } else {
+      content = content + 'Start: ' + event.start + '<br />End: ' + event.end;
+    }
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
       content = content + '<br />' + event.location; // "<p>" + event.location + "</p>";
