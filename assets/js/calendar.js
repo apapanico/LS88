@@ -36,10 +36,10 @@ $(document).ready(function() {
         maxTime: "19:00:00",
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
-        // eventRender: function(eventObj, $el) {
-        //   $el.popover({
-        //     title: eventObj.title,
-        //     content: eventObj.description,
+        // eventRender: function(event, element) {
+        //   $(element).popover({
+        //     title: event.title,
+        //     content: event.description,
         //     trigger: 'hover',
         //     placement: 'top',
         //     container: 'body'
