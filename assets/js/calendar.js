@@ -78,6 +78,7 @@ $(document).ready(function() {
       defaultDate: calendarStartDate(),
 
       eventRender: function(eventObj, el) {
+        alert(eventObj.description)
         $(el).popover({
           trigger: 'hover',
           title: eventObj.title,
