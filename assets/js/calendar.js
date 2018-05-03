@@ -79,7 +79,7 @@ $(document).ready(function() {
       eventRender: function(eventObj, el) {
         $(el).popover({
           trigger: 'hover',
-          // title: eventObj.title,
+          title: eventObj.title,
           // content: eventObj.description,
           placement: 'top',
           container: 'body'
