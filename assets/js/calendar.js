@@ -12,16 +12,14 @@ var transform = function(event) {
 // Add location to event display.
 var render = function(event, element, view) {
     if (event.description !== undefined){
-      var content =  event.description; // "<p>" + event.description + "</p>";
+      var content =  event.description + "<br />"; // "<p>" + event.description + "</p>";
     } else {
       var content = "";
     }
+    content = content + 'Start: ' + event.starts_at + '<br />End: ' + event.ends_at;
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
-      if (event.description !== undefined){
-        content = content + "<br />";
-      }
-      content = content + event.location; // "<p>" + event.location + "</p>";
+      content = content + '<br />' + event.location; // "<p>" + event.location + "</p>";
     }
     $(element).popover({
       html: true,
@@ -29,7 +27,7 @@ var render = function(event, element, view) {
       title: event.title,
       content: content,
       placement: 'top',
-      container: 'body'
+      container: '#weekly',
     });
     return element;
 }
