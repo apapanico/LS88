@@ -12,16 +12,16 @@ var transform = function(event) {
 // Add location to event display.
 var render = function(event, element, view) {
     if (event.description !== undefined){
-      var content = "<p>" + event.description + "</p>";
+      var content =  event.description; // "<p>" + event.description + "</p>";
     } else {
       var content = "";
     }
     if (event.location !== undefined){
       element.append($('<div class="fc-location">').html(event.location));
-      // if (event.description !== undefined){
-      //   content = content + "<br />";
-      // }
-      content = content + "<p>" + event.location + "</p>";
+      if (event.description !== undefined){
+        content = content + "<br />";
+      }
+      content = content + event.location; // "<p>" + event.location + "</p>";
     }
     $(element).popover({
       html: true,
