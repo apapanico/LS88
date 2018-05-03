@@ -37,9 +37,7 @@ $(document).ready(function() {
         defaultDate: calendarStartDate(),
         googleCalendarApiKey: apiKey,
         eventRender: function(event, element) {
-            element.qtip({
-                content: event.description
-            });
+            $(element).tooltip({title: event.title});             
         },
         eventSources: [
           {
@@ -65,7 +63,3 @@ $(document).ready(function() {
         ]
     });
 });
-
-// eventRender: function(event, element) {
-        //     $(element).tooltip({title: event.title});             
-        // },
