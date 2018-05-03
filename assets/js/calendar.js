@@ -30,7 +30,7 @@ $(document).ready(function() {
         defaultView: $(window).width() >= 768 ? 'agendaWeek' : 'agendaDay',
         allDaySlot: true,
         slotEventOverlap: false,
-        weekends: true,
+        weekends: false,
         height: "auto",
         minTime: "09:00:00",
         maxTime: "19:00:00",
@@ -45,17 +45,17 @@ $(document).ready(function() {
           {
             googleCalendarId: berkeleyCalendarId,
             cache: true,
-            color: '#0072c1'
+            color: '#D81B60'
           },
           {
             googleCalendarId: holidayCalendarId,
             cache: true,
-            color: '#0072c1'
+            color: '#0B8043'
           },
           {
             googleCalendarId: holiday2CalendarId,
             cache: true,
-            color: '#0072c1'
+            color: '#009688'
           }
         ]
     });
