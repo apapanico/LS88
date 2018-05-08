@@ -1,5 +1,5 @@
 /* Start/end date of semester */
-var startDate = '2018-01-15', endDate = '2018-05-08';
+var startDate = '2018-01-15', endDate = '2018-05-12';
 
 /* Calendar Specification */
 var apiKey = 'AIzaSyBb3qtBT4JXavAr4spAZNBayxU6Aa5lWz8';
